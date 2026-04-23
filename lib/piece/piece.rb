@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 # An abstract class for a single chess piece
-class Base
+class Piece
   # variables:
   # player: a reference to player they belong to (white player or black player)
   # board: a reference to the board this piece belongs to
