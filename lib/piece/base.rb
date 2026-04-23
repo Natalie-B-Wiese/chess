@@ -9,15 +9,16 @@ class Base
 
   attr_reader :player
 
-  def initialize(player, board)
+  def initialize(player, board, symbol)
     @player = player
     @board = board
+    @symbol = symbol
   end
 
   # methods:
   # #to_s returns the piece's unique symbol
   def to_s
-    raise NotImplementedError, 'This method must be implemented in a subclass'
+    @symbol
   end
 
   # #same_player?(ChessPiece other)
