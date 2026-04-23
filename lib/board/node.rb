@@ -6,6 +6,10 @@ class Node
   # variables:
   # id: a unique id of the node that includes the column as a letter name and the row as a number (eg h8)
   # piece (a reference to the chess piece this node holds)
+  def initialize(id)
+    @id = id
+    @piece = nil
+  end
 
   # methods:
   # full?
