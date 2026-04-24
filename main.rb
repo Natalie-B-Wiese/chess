@@ -6,6 +6,7 @@ require_relative 'lib/player_pieces'
 player1 = Player.new('Player 1', true)
 player2 = Player.new('Player 2', false)
 
+puts "\e[31mThis is red\e[0m"
 game = Game.new(player1, player2)
 
 player1_pieces = PlayerPieces.new(player1, game.board)

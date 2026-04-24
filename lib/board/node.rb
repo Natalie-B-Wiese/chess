@@ -17,8 +17,14 @@ class Node
   end
 
   def to_s
-    content = @piece.nil? ? ' ' : @piece.to_s
-    Node.left_border + content + Node.right_border
+    return Node.left_border + ' ' + Node.right_border if @piece.nil?
+
+    str = '|'
+    # the '|' count as part of the size
+    str += ' ' * (Node::PADDING - 2)
+    str += @piece.to_s
+    str += '|'
+    str
   end
 
   # returns a string for a top or bottom horizontal border

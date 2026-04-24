@@ -9,16 +9,21 @@ class Piece
 
   attr_reader :player
 
+  WHITE = "\e[47m"
+  BLACK = "\e[100m"
+  RESET = "\e[49m"
+
   def initialize(player, board, symbol)
     @player = player
     @board = board
     @symbol = symbol
+    @color = player.is_white ? WHITE : BLACK
   end
 
   # methods:
   # #to_s returns the piece's unique symbol
   def to_s
-    @symbol
+    "#{@color} #{@symbol} #{RESET}"
   end
 
   # #same_player?(ChessPiece other)
