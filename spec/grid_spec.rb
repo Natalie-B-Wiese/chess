@@ -204,6 +204,158 @@ describe Grid do
     end
   end
 
+  describe '#mirror_row_column' do
+    context 'when row is 0 and column is 0' do
+      row = 0
+      column = 0
+
+      mirror_row = Grid::HEIGHT - 1
+      mirror_column = Grid::WIDTH - 1
+
+      result = described_class.mirror_row_column(row, column)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it "returns [#{mirror_row}, #{mirror_column}]" do
+        expect(result).to eq([mirror_row, mirror_column])
+      end
+    end
+
+    context 'when row is 1 and column is 0' do
+      row = 1
+      column = 0
+
+      mirror_row = Grid::HEIGHT - 2
+      mirror_column = Grid::WIDTH - 1
+
+      result = described_class.mirror_row_column(row, column)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it "returns [#{mirror_row}, #{mirror_column}]" do
+        expect(result).to eq([mirror_row, mirror_column])
+      end
+    end
+
+    context 'when row is 0 and column is 1' do
+      row = 0
+      column = 1
+
+      mirror_row = Grid::HEIGHT - 1
+      mirror_column = Grid::WIDTH - 2
+
+      result = described_class.mirror_row_column(row, column)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it "returns [#{mirror_row}, #{mirror_column}]" do
+        expect(result).to eq([mirror_row, mirror_column])
+      end
+    end
+
+    context "when row is #{Grid::HEIGHT - 1} and column is 0" do
+      row = Grid::HEIGHT - 1
+      column = 0
+
+      mirror_row = 0
+      mirror_column = Grid::WIDTH - 1
+
+      result = described_class.mirror_row_column(row, column)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it "returns [#{mirror_row}, #{mirror_column}]" do
+        expect(result).to eq([mirror_row, mirror_column])
+      end
+    end
+
+    context "when row is #{Grid::HEIGHT - 1} and column is #{Grid::WIDTH - 1}" do
+      row = Grid::HEIGHT - 1
+      column = Grid::WIDTH - 1
+
+      mirror_row = 0
+      mirror_column = 0
+
+      result = described_class.mirror_row_column(row, column)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it "returns [#{mirror_row}, #{mirror_column}]" do
+        expect(result).to eq([mirror_row, mirror_column])
+      end
+    end
+  end
+
+  describe '#mirror_node_id' do
+    context 'when calling method' do
+      # dummy data. Values don't matter
+      id = 'A1'
+      row = 0
+      column = 0
+      goal_id = 'H8'
+      mirrored_row = Grid::HEIGHT - 1
+      mirrored_column = Grid::WIDTH - 1
+
+      before do
+        allow(described_class).to receive(:node_id_to_row_column).and_return([row, column])
+
+        allow(described_class).to receive(:mirror_row_column).and_return([mirrored_row, mirrored_column])
+
+        allow(described_class).to receive(:row_column_to_node_id).and_return(goal_id)
+      end
+
+      it 'calls #node_id_to_row_column with id parameter' do
+        expect(described_class).to receive(:node_id_to_row_column).with(id)
+        described_class.mirror_node_id(id)
+      end
+
+      it 'calls #mirror_row_column with result from #node_id_to_row_column' do
+        expect(described_class).to receive(:mirror_row_column).with(row, column)
+        described_class.mirror_node_id(id)
+      end
+
+      it 'calls #row_column_to_node_id with row and column result from #mirror_row_column' do
+        expect(described_class).to receive(:row_column_to_node_id).with(mirrored_row, mirrored_column)
+        described_class.mirror_node_id(id)
+      end
+
+      it 'returns result of #row_column_to_node_id' do
+        result = described_class.mirror_node_id(id)
+        expect(result).to eq(goal_id)
+      end
+    end
+  end
+
   describe '#node_at_position' do
     context 'when calling it on in-bounds position with 2 parameters' do
       valid_x = 0

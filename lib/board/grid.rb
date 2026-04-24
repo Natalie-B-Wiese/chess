@@ -35,6 +35,20 @@ class Grid
     [row_index, column_index]
   end
 
+  # returns an array where element 0 is a 0-based row, and element 1 is a 0-based column
+  def self.mirror_row_column(row, column)
+    mirrored = []
+    mirrored[0] = (HEIGHT - 1) - row
+    mirrored[1] = (WIDTH - 1) - column
+    mirrored
+  end
+
+  def self.mirror_node_id(node_id)
+    row, column = Grid.node_id_to_row_column(node_id)
+    mirrored_row, mirrored_column = Grid.mirror_row_column(row, column)
+    row_column_to_node_id(mirrored_row, mirrored_column)
+  end
+
   # draws the entire board in the terminal
   def draw_board
     draw_column_letters
