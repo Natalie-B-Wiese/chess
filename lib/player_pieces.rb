@@ -9,29 +9,29 @@ require_relative 'piece/rook'
 class PlayerPieces
   attr_reader :pieces
 
-  def initialize(player, board, is_white)
+  def initialize(player, board)
     @pieces = []
-    create_pieces(player, board, is_white)
+    create_pieces(player, board)
   end
 
-  def create_pieces(player, board, is_white)
-    @pieces.push(King.new(player, board, is_white))
-    @pieces.push(Queen.new(player, board, is_white))
+  def create_pieces(player, board)
+    @pieces.push(King.new(player, board))
+    @pieces.push(Queen.new(player, board))
 
     2.times do
-      @pieces.push(Rook.new(player, board, is_white))
+      @pieces.push(Rook.new(player, board))
     end
 
     2.times do
-      @pieces.push(Bishop.new(player, board, is_white))
+      @pieces.push(Bishop.new(player, board))
     end
 
     2.times do
-      @pieces.push(Knight.new(player, board, is_white))
+      @pieces.push(Knight.new(player, board))
     end
 
     8.times do
-      @pieces.push(Pawn.new(player, board, is_white))
+      @pieces.push(Pawn.new(player, board))
     end
   end
 end

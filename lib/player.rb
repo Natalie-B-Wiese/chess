@@ -3,7 +3,11 @@
 class Player
   # variables:
   # name
-  def initialize(name)
+
+  attr_reader :is_white
+
+  def initialize(name, is_white)
     @name = name
+    @is_white = is_white
   end
 end
