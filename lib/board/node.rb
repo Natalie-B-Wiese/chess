@@ -9,7 +9,7 @@ class Node
   PADDING = 2
   SIZE = ((PADDING * 2) + 1)
 
-  attr_reader :id
+  attr_reader :id, :piece
 
   def initialize(id)
     @id = id
@@ -47,10 +47,15 @@ class Node
   # methods:
   # full?
   # Returns true if this node is occuppied by a piece
+  def full?
+    !@piece.nil?
+  end
 
-  # delete_piece
-  # Removes the current chess piece from this node
-
-  # place_piece(ChessPiece)
-  # Places the specified chess piece in this node
+  # Replaces the current @piece value with chess_piece
+  # It returns the chess piece that was replaced (which could be nil)
+  def replace_piece(chess_piece)
+    previous_piece = @piece
+    @piece = chess_piece
+    previous_piece
+  end
 end
