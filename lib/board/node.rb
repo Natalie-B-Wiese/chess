@@ -9,6 +9,8 @@ class Node
   PADDING = 2
   SIZE = ((PADDING * 2) + 1)
 
+  attr_reader :id
+
   def initialize(id)
     @id = id
     @piece = nil

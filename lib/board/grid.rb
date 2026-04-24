@@ -37,13 +37,33 @@ class Grid
 
   # methods:
   # #node_at_position(x, y, x_offset=0, y_offset=0)
-  # return nil if x or y is negative
-  # return nil if y+y_offset>=HEIGHT
-  # return nil if x+x_offset>=WIDTH
-  # returns nodes[y+y_offset][x+x_offset]
+  # Note: x and y are 0-based
+  # return nil if out of bounds
+  # Otherwise, it returns nodes[y+y_offset][x+x_offset]
+  def node_at_position(x, y, x_offset = 0, y_offset = 0)
+    return nil if position_out_of_bounds?(x + x_offset, y + y_offset)
+
+    @nodes[y + y_offset][x + x_offset]
+  end
+
+  # returns true if the x y position is out of bounds
+  # False if the position is in bounds
+  # Note: x and y are 0-based
+  def position_out_of_bounds?(x, y)
+    x.negative? || y.negative? || x >= WIDTH || y >= HEIGHT
+  end
 
   # node_by_id(id)
-  # Select the node with the specified id from nodes array
+  # Returns the node with the specified id from nodes array
+  # Returns nil if the node with the id doesn't exist
+  def node_by_id(id)
+    # ID of node looks like: #{ALPHABET[c]}#{r + 1}
+    nodes_with_id = @nodes.select { |node| node.id == id }
+    return nil if nodes_with_id.empty?
+
+    # there should only be one node with the specified id
+    nodes_with_id[0]
+  end
 
   private
 
