@@ -72,6 +72,138 @@ describe Grid do
     end
   end
 
+  describe '#row_column_to_node_id' do
+    context 'when row is 0 and column is 0' do
+      row = 0
+      column = 0
+
+      it 'returns A1' do
+        result = described_class.row_column_to_node_id(row, column)
+        expect result
+      end
+    end
+
+    context 'when row is 1 and column is 0' do
+      row = 1
+      column = 0
+
+      it 'returns A2' do
+        result = described_class.row_column_to_node_id(row, column)
+        expect result
+      end
+    end
+
+    context 'when row is 0 and column is 1' do
+      row = 0
+      column = 1
+
+      it 'returns B1' do
+        result = described_class.row_column_to_node_id(row, column)
+        expect result
+      end
+    end
+
+    context 'when row is 6 and column is 7' do
+      row = 0
+      column = 1
+
+      it 'returns H7' do
+        result = described_class.row_column_to_node_id(row, column)
+        expect result
+      end
+    end
+  end
+
+  describe '#node_id_to_row_column' do
+    context 'when node_id is A1' do
+      node_id = 'A1'
+
+      # the expected results
+      goal_row = 0
+      goal_column = 0
+
+      result = described_class.node_id_to_row_column(node_id)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it 'returns [0, 0]' do
+        expect(result).to eq([goal_row, goal_column])
+      end
+    end
+
+    context 'when node_id is A2' do
+      node_id = 'A2'
+
+      # the expected results
+      goal_row = 1
+      goal_column = 0
+
+      result = described_class.node_id_to_row_column(node_id)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it 'returns [1, 0]' do
+        expect(result).to eq([goal_row, goal_column])
+      end
+    end
+
+    context 'when node_id is B1' do
+      node_id = 'B1'
+
+      # the expected results
+      goal_row = 0
+      goal_column = 1
+
+      result = described_class.node_id_to_row_column(node_id)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it 'returns [0, 1]' do
+        expect(result).to eq([goal_row, goal_column])
+      end
+    end
+
+    context 'when node_id is H7' do
+      node_id = 'H7'
+
+      # the expected results
+      goal_row = 6
+      goal_column = 7
+
+      result = described_class.node_id_to_row_column(node_id)
+
+      it 'returns an array' do
+        expect(result).to be_an(Array)
+      end
+
+      it 'returns an array of length 2' do
+        expect(result.length).to eq(2)
+      end
+
+      it 'returns [6, 7]' do
+        expect(result).to eq([goal_row, goal_column])
+      end
+    end
+  end
+
   describe '#node_at_position' do
     context 'when calling it on in-bounds position with 2 parameters' do
       valid_x = 0

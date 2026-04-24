@@ -15,11 +15,24 @@ class Grid
     (0...HEIGHT).each do |r|
       @nodes.push([])
       (0...WIDTH).each do |c|
-        node_id = "#{ALPHABET[c]}#{r + 1}"
+        node_id = Grid.row_column_to_node_id(r, c)
         node = Node.new(node_id)
         @nodes[r].push(node)
       end
     end
+  end
+
+  # converts a row column to a letter followed by a 1-based number
+  def self.row_column_to_node_id(row, column)
+    ALPHABET[column] + (row + 1).to_s
+  end
+
+  # returns an array where element 0 is a 0-based row, and element 1 is a 0-based column
+  def self.node_id_to_row_column(node_id)
+    column_letter = node_id[0]
+    column_index = ALPHABET.index(column_letter)
+    row_index = node_id[1].to_i - 1
+    [row_index, column_index]
   end
 
   # draws the entire board in the terminal
