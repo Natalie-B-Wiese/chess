@@ -1,5 +1,7 @@
 # frozen-string-literal: true
 
+require_relative 'piece'
+
 # a queen piece
 class Queen < Piece
   def initialize(player, board, is_white)

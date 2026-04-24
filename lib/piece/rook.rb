@@ -1,5 +1,7 @@
 # frozen-string-literal: true
 
+require_relative 'piece'
+
 # a rook piece
 class Rook < Piece
   def initialize(player, board, is_white)
