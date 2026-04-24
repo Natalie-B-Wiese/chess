@@ -54,11 +54,12 @@ class Grid
   end
 
   # node_by_id(id)
-  # Returns the node with the specified id from nodes array
+  # Uses case-insensitive search to return the node with the specified id from nodes array
   # Returns nil if the node with the id doesn't exist
   def node_by_id(id)
-    # ID of node looks like: #{ALPHABET[c]}#{r + 1}
-    nodes_with_id = @nodes.select { |node| node.id == id }
+    id = id.upcase
+    nodes_with_id = @nodes.flatten.select { |node| node.id == id }
+
     return nil if nodes_with_id.empty?
 
     # there should only be one node with the specified id
