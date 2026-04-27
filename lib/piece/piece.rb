@@ -28,8 +28,13 @@ class Piece
 
   # #same_player?(ChessPiece other)
   # Returns true if this piece and the other piece have the same player, false otherwise
-  def same_player?(other)
-    @player == other.player
+  def same_player?(other_piece)
+    @player == other_piece.player
+  end
+
+  # the node this piece is currently in
+  def node
+    @board.node_by_piece(self)
   end
 
   # #valid_move?(Node node)

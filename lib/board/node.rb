@@ -64,4 +64,9 @@ class Node
     @piece = chess_piece
     previous_piece
   end
+
+  # Removes the piece from this node
+  def remove_piece
+    @piece = nil
+  end
 end

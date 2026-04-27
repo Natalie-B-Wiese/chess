@@ -12,4 +12,4 @@ game = Game.new(player1, player2)
 player1_pieces = PlayerPieces.new(player1, game.board)
 player2_pieces = PlayerPieces.new(player2, game.board)
 
-game.board.draw_board
+game.play_game

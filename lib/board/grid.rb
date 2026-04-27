@@ -31,7 +31,7 @@ class Grid
   def self.node_id_to_row_column(node_id)
     column_letter = node_id[0]
     column_index = ALPHABET.index(column_letter)
-    row_index = node_id[1].to_i - 1
+    row_index = Integer(node_id[1]) - 1
     [row_index, column_index]
   end
 
@@ -76,7 +76,7 @@ class Grid
   # returns true if the x y position is out of bounds
   # False if the position is in bounds
   # Note: x and y are 0-based
-  def position_out_of_bounds?(x, y)
+  def self.position_out_of_bounds?(x, y)
     x.negative? || y.negative? || x >= WIDTH || y >= HEIGHT
   end
 
@@ -91,6 +91,30 @@ class Grid
 
     # there should only be one node with the specified id
     nodes_with_id[0]
+  end
+
+  # untested
+  # Returns the node that contains that specific chess piece object.
+  # Note: Piece must match exactly. Two rooks of the same player are still different pieces
+  def node_by_piece(piece)
+    node_with_piece = @nodes.flatten.select { |node| node.piece == piece }
+    return nil if node_with_piece.empty?
+
+    node_with_piece[0]
+  end
+
+  # returns true if the node_id matches the format of a node id
+  # Will return false if the node is out of bounds
+  def self.valid_node_id?(node_id)
+    node_id = node_id.upcase
+
+    return false if node_id.length != 2
+    return false unless ALPHABET.include?(node_id[0])
+    return false unless Integer(node_id[1]).is_a?(Integer)
+
+    row, column = node_id_to_row_column(node_id)
+
+    !position_out_of_bounds?(column, row)
   end
 
   private
