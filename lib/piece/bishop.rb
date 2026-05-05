@@ -21,9 +21,9 @@ class Bishop < Piece
 
   def valid_diagonal_nodes
     start_node = node
-    trim_friendly_endpoint(up_right_nodes(start_node), start_node) +
-      trim_friendly_endpoint(up_left_nodes(start_node), start_node) +
-      trim_friendly_endpoint(down_left_nodes(start_node), start_node) +
-      trim_friendly_endpoint(down_right_nodes(start_node), start_node)
+    trim_friendly_endpoint(up_right_nodes(@board, start_node), start_node) +
+      trim_friendly_endpoint(up_left_nodes(@board, start_node), start_node) +
+      trim_friendly_endpoint(down_left_nodes(@board, start_node), start_node) +
+      trim_friendly_endpoint(down_right_nodes(@board, start_node), start_node)
   end
 end
