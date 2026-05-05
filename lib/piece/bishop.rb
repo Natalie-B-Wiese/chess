@@ -5,7 +5,7 @@ require_relative 'moveset/diagonal_sliding_movement'
 
 # a bishop piece
 class Bishop < Piece
-  include Sliding
+  include DiagonalSlidingMovement
 
   def initialize(player, board)
     graphic = 'B'

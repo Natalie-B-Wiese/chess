@@ -5,7 +5,7 @@ require_relative 'moveset/vertical_sliding_movement'
 
 # a pawn piece
 class Pawn < Piece
-  include Sliding
+  include VerticalSlidingMovement
 
   def initialize(player, board)
     graphic = 'P'
