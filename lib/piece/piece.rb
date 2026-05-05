@@ -39,17 +39,12 @@ class Piece
 
   # #valid_move?(Node node)
   # returns true if this piece can move to the specified node
-  # The Node must be along this ChessPiece's valid move paths, otherwise this returns false
-  # It cannot move to the Node if its path is blocked by a piece (unless this chess piece is a horse)
-  # If node is occuppied by a piece that is the same_player? as this piece, it returns false
-  # If node is occuppied by a piece that is not the same_player? as this piece, it returns true
   def valid_move?(goal_node)
-    raise NotImplementedError, 'This method must be implemented in a subclass'
+    paths.include?(goal_node)
   end
 
   # paths
-  # Returns an array of all nodes that this piece could move to, based solely on this piece's move direction
-  # Not all nodes it returns are a valid_move. It does not take into account if the node is occuppied
+  # Returns an array of all valid nodes that this piece can move to
   def paths
     raise NotImplementedError, 'This method must be implemented in a subclass'
   end

@@ -14,10 +14,6 @@ class Pawn < Piece
     super(player, board, graphic)
   end
 
-  def valid_move?(goal_node)
-    paths.include?(goal_node)
-  end
-
   # paths
   # Returns an array of all valid nodes that this piece could move to
   def paths
