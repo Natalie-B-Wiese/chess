@@ -361,11 +361,11 @@ describe Grid do
       valid_x = 0
       valid_y = 2
       before do
-        allow(grid).to receive(:position_out_of_bounds?).with(valid_x, valid_y).and_return(false)
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
       end
 
       it 'calls #position_out_of_bounds? with correct parameters' do
-        expect(grid).to receive(:position_out_of_bounds?)
+        expect(described_class).to receive(:position_out_of_bounds?).with(valid_x, valid_y)
         grid.node_at_position(valid_x, valid_y)
       end
 
@@ -391,11 +391,11 @@ describe Grid do
       valid_total_y = valid_y + valid_y_offset
 
       before do
-        allow(grid).to receive(:position_out_of_bounds?).with(valid_total_x, valid_total_y).and_return(false)
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
       end
 
       it 'calls #position_out_of_bounds?' do
-        expect(grid).to receive(:position_out_of_bounds?)
+        expect(described_class).to receive(:position_out_of_bounds?).with(valid_total_x, valid_total_y)
         grid.node_at_position(valid_x, valid_y, valid_x_offset, valid_y_offset)
       end
 
@@ -416,11 +416,11 @@ describe Grid do
       invalid_y = 200
 
       before do
-        allow(grid).to receive(:position_out_of_bounds?).and_return(true)
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(true)
       end
 
       it 'calls #position_out_of_bounds?' do
-        expect(grid).to receive(:position_out_of_bounds?)
+        expect(described_class).to receive(:position_out_of_bounds?).with(invalid_x, invalid_y)
         grid.node_at_position(invalid_x, invalid_y)
       end
 
@@ -437,7 +437,7 @@ describe Grid do
         x = 0
         y = 0
         it 'returns false' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(false)
         end
       end
@@ -446,7 +446,7 @@ describe Grid do
         x = Grid::WIDTH - 1
         y = 0
         it 'returns false' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(false)
         end
       end
@@ -455,7 +455,7 @@ describe Grid do
         x = 0
         y = Grid::HEIGHT - 1
         it 'returns false' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(false)
         end
       end
@@ -466,7 +466,7 @@ describe Grid do
         x = Grid::WIDTH
         y = 0
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end
@@ -475,7 +475,7 @@ describe Grid do
         x = 0
         y = Grid::HEIGHT
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end
@@ -484,7 +484,7 @@ describe Grid do
         x = -1
         y = 0
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end
@@ -493,7 +493,7 @@ describe Grid do
         x = 0
         y = -1
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end
@@ -502,7 +502,7 @@ describe Grid do
         x = -1
         y = -1
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end
@@ -511,7 +511,7 @@ describe Grid do
         x = 100
         y = 120
         it 'returns true' do
-          result = grid.position_out_of_bounds?(x, y)
+          result = described_class.position_out_of_bounds?(x, y)
           expect(result).to eq(true)
         end
       end

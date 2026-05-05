@@ -68,7 +68,7 @@ class Grid
   # return nil if out of bounds
   # Otherwise, it returns nodes[y+y_offset][x+x_offset]
   def node_at_position(x, y, x_offset = 0, y_offset = 0)
-    return nil if position_out_of_bounds?(x + x_offset, y + y_offset)
+    return nil if Grid.position_out_of_bounds?(x + x_offset, y + y_offset)
 
     node_at_row_column(y + y_offset, x + x_offset)
   end
@@ -121,7 +121,7 @@ class Grid
 
     row, column = node_id_to_row_column(node_id)
 
-    !position_out_of_bounds?(column, row)
+    !Grid.position_out_of_bounds?(column, row)
   end
 
   private
