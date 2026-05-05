@@ -16,7 +16,7 @@ class Grid
       @nodes.push([])
       (0...WIDTH).each do |c|
         node_id = Grid.row_column_to_node_id(r, c)
-        node = Node.new(node_id)
+        node = Node.new(r, c, node_id)
         @nodes[r].push(node)
       end
     end
@@ -70,7 +70,7 @@ class Grid
   def node_at_position(x, y, x_offset = 0, y_offset = 0)
     return nil if position_out_of_bounds?(x + x_offset, y + y_offset)
 
-    @nodes[y + y_offset][x + x_offset]
+    node_at_row_column(y + y_offset, x + x_offset)
   end
 
   # returns true if the x y position is out of bounds
@@ -101,6 +101,13 @@ class Grid
     return nil if node_with_piece.empty?
 
     node_with_piece[0]
+  end
+
+  # gets a node at a specified position. Returns nil if out of bounds
+  def node_at_row_column(row, column)
+    return nil if Grid.position_out_of_bounds?(column, row)
+
+    @nodes[row][column]
   end
 
   # returns true if the node_id matches the format of a node id

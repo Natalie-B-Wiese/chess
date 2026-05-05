@@ -38,7 +38,7 @@ class Game
       starting_node = start_node
       return false if starting_node.nil?
 
-      ending_node = end_node
+      ending_node = end_node(starting_node)
       next if ending_node.nil?
 
       ending_node.replace_piece(starting_node.piece)
@@ -85,31 +85,22 @@ class Game
 
   # returns a valid ending node
   # Returns nil if user typed 'back'
-  def end_node
+  def end_node(starting_node)
     loop do
       response = player_node_id("Enter ending position (eg A1) or type 'back' to go back")
 
       return nil if response == 'back'
 
       node = @board.node_by_id(response)
-      return node if valid_end_node?(node)
+      return node if valid_end_node?(starting_node, node)
     end
   end
 
   # returns true if the node is valid, otherwise returns false
-  def valid_end_node?(node)
-    puts 'TODO: add a check to see if the piece at that node can move to the tile based on Chess piece\'s move range'
-    if node.nil?
-      puts 'Invalid node'
-    elsif !node.full?
-      return true
-    elsif node.piece.player == @current_player
-      puts 'You already have a piece on that tile!'
-    else
-      # if killing previous player
-      return true
-    end
+  def valid_end_node?(starting_node, goal_node)
+    return true if !goal_node.nil? && starting_node.piece.valid_move?(goal_node)
 
+    puts "Invalid move for #{starting_node.piece.class}"
     false
   end
 

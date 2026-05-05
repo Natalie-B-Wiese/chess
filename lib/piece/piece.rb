@@ -43,7 +43,7 @@ class Piece
   # It cannot move to the Node if its path is blocked by a piece (unless this chess piece is a horse)
   # If node is occuppied by a piece that is the same_player? as this piece, it returns false
   # If node is occuppied by a piece that is not the same_player? as this piece, it returns true
-  def valid_move?(node)
+  def valid_move?(goal_node)
     raise NotImplementedError, 'This method must be implemented in a subclass'
   end
 
