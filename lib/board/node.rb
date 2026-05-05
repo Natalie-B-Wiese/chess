@@ -18,6 +18,14 @@ class Node
     @piece = nil
   end
 
+  # returns true if this node is occuppied by a piece with the same player as other_node's piece
+  # Returns false if piece belongs to a different player or piece is nil
+  def same_player?(other_node)
+    return piece.player == other_node.piece.player if full? && other_node.full?
+
+    false
+  end
+
   def to_s
     return Node.left_border + ' ' + Node.right_border if @piece.nil?
 
