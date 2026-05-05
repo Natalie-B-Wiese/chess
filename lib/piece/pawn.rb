@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
-require_relative 'moveset/sliding'
+require_relative 'moveset/vertical_sliding_movement'
 
 # a pawn piece
 class Pawn < Piece
