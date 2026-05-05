@@ -1,7 +1,7 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
-require_relative 'moveset/sliding'
+require_relative 'moveset/diagonal_sliding_movement'
 
 # a bishop piece
 class Bishop < Piece
@@ -14,45 +14,22 @@ class Bishop < Piece
   end
 
   def paths
-    start_node = node
-    valid_positive_slope(start_node) + valid_negative_slope(start_node)
+    valid_diagonal_nodes
   end
 
   private
 
-  def valid_positive_slope(start_node)
-    valid_positive_right_slope(start_node) + valid_positive_left_slope(start_node)
+  def valid_diagonal_nodes
+    start_node = node
+    trim_friendly_endpoint(up_right_nodes(start_node), start_node) +
+      trim_friendly_endpoint(up_left_nodes(start_node), start_node) +
+      trim_friendly_endpoint(down_left_nodes(start_node), start_node) +
+      trim_friendly_endpoint(down_right_nodes(start_node), start_node)
   end
 
-  def valid_negative_slope(start_node)
-    valid_negative_right_slope(start_node) + valid_negative_left_slope(start_node)
-  end
-
-  # a slope going up to the right
-  def valid_positive_right_slope(start_node)
-    path_array = diagonal_nodes(@board, start_node, 1, 1)
-    validated_path_array(path_array, start_node)
-  end
-
-  # a slope going down to the left
-  def valid_positive_left_slope(start_node)
-    path_array = diagonal_nodes(@board, start_node, -1, -1)
-    validated_path_array(path_array, start_node)
-  end
-
-  # a slope going down to the right
-  def valid_negative_right_slope(start_node)
-    path_array = diagonal_nodes(@board, start_node, 1, -1)
-    validated_path_array(path_array, start_node)
-  end
-
-  # a slope going up to the left
-  def valid_negative_left_slope(start_node)
-    path_array = diagonal_nodes(@board, start_node, -1, 1)
-    validated_path_array(path_array, start_node)
-  end
-
-  def validated_path_array(path_array, start_node)
+  # Removes the last node from path_array if the last nodes's piece belongs to the same player as this piece
+  # Note: it modifies the original array
+  def trim_friendly_endpoint(path_array, start_node)
     return path_array if path_array.empty?
 
     # remove last node if it is occuppied by same player
