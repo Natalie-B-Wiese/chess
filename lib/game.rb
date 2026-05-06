@@ -47,9 +47,23 @@ class Game
     end
   end
 
-  # switches the player and display's a message indicating the new player
+  # switches the player
   def switch_player
-    @current_player = @current_player == @player1 ? @player2 : @player1
+    @current_player = opposite_player(@current_player)
+  end
+
+  # returns the opposite player to the passed in player
+  def opposite_player(player)
+    player == @player1 ? @player2 : @player1
+  end
+
+  # returns true if the specified node can be reached by any of player's pieces in a single move
+  def node_reachable_by_player?(goal_node, player)
+    @board.nodes_with_player_piece(player).each do |node|
+      return true if node.piece.paths.include?(goal_node)
+    end
+
+    false
   end
 
   private
