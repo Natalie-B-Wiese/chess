@@ -34,17 +34,23 @@ class Game
   # plays a round
   # It returns false if quitting and true if it should continue playing
   def play_round
-    loop do
-      starting_node = start_node
-      return false if starting_node.nil?
+    move = start_and_end_node
 
-      ending_node = end_node(starting_node)
-      next if ending_node.nil?
+    return false if move.nil?
 
-      ending_node.replace_piece(starting_node.piece)
-      starting_node.remove_piece
-      return true
-    end
+    start_node, end_node = move
+    selected_piece = start_node.piece
+
+    # preform the move
+    piece_killed = end_node.replace_piece(selected_piece)
+    start_node.remove_piece
+
+    print_move_result(@current_player, selected_piece, end_node, piece_killed)
+
+    return true unless piece_killed.instance_of?(King)
+
+    puts 'Game over!'
+    false
   end
 
   # switches the player
@@ -67,6 +73,29 @@ class Game
   end
 
   private
+
+  # returns a valid start and end node as an array
+  # index 0 is start node, and index 1 is end node.
+  # returns nil if user quit game.
+  def start_and_end_node
+    ending_node = nil
+
+    while ending_node.nil?
+      starting_node = start_node
+      return nil if starting_node.nil?
+
+      ending_node = end_node(starting_node)
+    end
+
+    [starting_node, ending_node]
+  end
+
+  def print_move_result(player, selected_piece, end_node, piece_killed)
+    str = "#{player.name}'s #{selected_piece.class} moved to #{end_node.id}"
+
+    str += " and killed #{piece_killed.player.name}'s #{piece_killed.class}" unless piece_killed.nil?
+    puts str
+  end
 
   # returns a valid starting node
   # start_node always contains a chess piece that belongs to this player
