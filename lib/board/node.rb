@@ -1,5 +1,7 @@
 # frozen-string-literal: true
 
+require_relative 'grid_coordinates'
+
 # an abstract class for holding a node
 # Nodes cannot exist without a grid
 class Node
@@ -11,10 +13,10 @@ class Node
 
   attr_reader :row, :column, :id, :piece
 
-  def initialize(row, column, id)
+  def initialize(row, column)
     @row = row
     @column = column
-    @id = id
+    @id = GridCoordinates.row_column_to_node_id(row, column)
     @piece = nil
   end
 
@@ -27,7 +29,7 @@ class Node
   end
 
   def to_s
-    return Node.left_border + ' ' + Node.right_border if @piece.nil?
+    return "#{Node.left_border} #{Node.right_border}" if @piece.nil?
 
     str = '|'
     # the '|' count as part of the size

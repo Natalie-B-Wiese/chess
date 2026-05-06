@@ -1,6 +1,8 @@
 # frozen-string-literal: true
 
 require_relative 'board/grid'
+require_relative 'board/grid_drawer'
+require_relative 'board/grid_coordinates'
 
 # holds a game
 class Game
@@ -20,7 +22,7 @@ class Game
     keep_playing = true
 
     until keep_playing == false
-      @board.draw_board
+      GridDrawer.draw(@board)
       print_current_player
 
       keep_playing = play_round
@@ -155,7 +157,7 @@ class Game
 
       if answer.downcase == 'back'
         return 'back'
-      elsif Grid.valid_node_id?(answer)
+      elsif GridCoordinates.valid_node_id?(answer)
         return answer
       end
 
