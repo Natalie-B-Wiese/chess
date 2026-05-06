@@ -93,16 +93,6 @@ class Grid
     nodes_with_id[0]
   end
 
-  # untested
-  # Returns the node that contains that specific chess piece object.
-  # Note: Piece must match exactly. Two rooks of the same player are still different pieces
-  def node_by_piece(piece)
-    node_with_piece = @nodes.flatten.select { |node| node.piece == piece }
-    return nil if node_with_piece.empty?
-
-    node_with_piece[0]
-  end
-
   # gets a node at a specified position. Returns nil if out of bounds
   def node_at_row_column(row, column)
     return nil if Grid.position_out_of_bounds?(column, row)
@@ -122,6 +112,16 @@ class Grid
     row, column = node_id_to_row_column(node_id)
 
     !Grid.position_out_of_bounds?(column, row)
+  end
+
+  # untested
+  # Returns the node that contains that specific chess piece object.
+  # Note: Piece must match exactly. Two rooks of the same player are still different pieces
+  def node_by_piece(piece)
+    node_with_piece = @nodes.flatten.select { |node| node.piece == piece }
+    return nil if node_with_piece.empty?
+
+    node_with_piece[0]
   end
 
   private

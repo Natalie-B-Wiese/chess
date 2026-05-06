@@ -2,10 +2,17 @@
 # frozen-string-literal: true
 
 require_relative '../lib/board/grid'
+require_relative '../lib/piece/piece'
+require_relative '../lib/player'
+
 describe Grid do
   subject(:grid) { described_class.new }
   describe '#initialize' do
     context 'when calling method' do
+      before do
+        allow(described_class).to receive(:row_column_to_node_id).and_return('A1')
+      end
+
       it 'creates an array of @nodes' do
         node_array = grid.instance_variable_get(:@nodes)
         expect(node_array).to be_an(Array)
@@ -54,20 +61,14 @@ describe Grid do
         expect(result).to eq(true)
       end
 
-      it 'each Node has correct id of ALPHABET[column_index](row_index+1)' do
-        # {ALPHABET[c]}#{r + 1}
-
-        node_array = grid.instance_variable_get(:@nodes)
-        result = true
-        node_array.each_with_index do |row, row_index|
-          row.each_with_index do |node, column_index|
-            if node.id != "#{Grid::ALPHABET[column_index]}#{row_index + 1}"
-              result = false
-              break
-            end
+      it 'it calls row_column_to_node_id with correct parameters' do
+        (0...Grid::HEIGHT).each do |r|
+          (0...Grid::WIDTH).each do |c|
+            expect(described_class).to receive(:row_column_to_node_id).with(r, c).once
           end
         end
-        expect(result).to eq(true)
+
+        described_class.new
       end
     end
   end
@@ -600,6 +601,193 @@ describe Grid do
       it 'returns nil' do
         result = grid.node_by_id(id)
         expect(result).to be_nil
+      end
+    end
+  end
+
+  describe '#node_at_row_column' do
+    context 'when row and column are each zero (in-bounds)' do
+      row = 0
+      column = 0
+      before do
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
+      end
+
+      it 'calls position_out_of_bounds with correct parameters' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        grid.node_at_row_column(row, column)
+      end
+
+      it 'returns a Node object' do
+        result = grid.node_at_row_column(row, column)
+        expect(result).to be_a(Node)
+      end
+
+      it 'returns correct Node object' do
+        # @nodes[row][column]
+        result = grid.node_at_row_column(row, column)
+        desired_result = grid.instance_variable_get(:@nodes)[row][column]
+        expect(result).to eq(desired_result)
+      end
+    end
+
+    context 'when row and column are some other in-bounds number' do
+      row = 3
+      column = 1
+      before do
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
+      end
+
+      it 'calls position_out_of_bounds with correct parameters' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        grid.node_at_row_column(row, column)
+      end
+
+      it 'returns a Node object' do
+        result = grid.node_at_row_column(row, column)
+        expect(result).to be_a(Node)
+      end
+
+      it 'returns correct Node object' do
+        # @nodes[row][column]
+        result = grid.node_at_row_column(row, column)
+        desired_result = grid.instance_variable_get(:@nodes)[row][column]
+        expect(result).to eq(desired_result)
+      end
+    end
+
+    context 'when row and column are out of bounds' do
+      row = 30
+      column = 120
+      before do
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(true)
+      end
+
+      it 'calls position_out_of_bounds with correct parameters' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        grid.node_at_row_column(row, column)
+      end
+
+      it 'returns nil' do
+        result = grid.node_at_row_column(row, column)
+        expect(result).to be_nil
+      end
+    end
+  end
+
+  describe '#valid_node_id?' do
+    context 'when node_id has a length of 1' do
+      node_id = 'A'
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when node_id has a length of 3' do
+      node_id = 'A12'
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when node_id has a length that does not equal 2' do
+      node_id = 'A120123'
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when node_id[0] is not a letter' do
+      node_id = '61'
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when node_id[1] is not an integer number' do
+      node_id = '6A'
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
+      end
+    end
+
+    context 'when node_id is valid' do
+      row = 0
+      column = 1
+      node_id = 'A2'
+      before do
+        allow(described_class).to receive(:node_id_to_row_column).and_return([row, column])
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
+      end
+
+      it 'calls node_id_to_row_column with correct parameter' do
+        expect(described_class).to receive(:node_id_to_row_column).with(node_id)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'calls position_out_of_bounds? with correct parameter' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'returns true' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(true)
+      end
+    end
+
+    context 'when node_id is lowercase' do
+      row = 0
+      column = 1
+      node_id = 'a2'
+      before do
+        allow(described_class).to receive(:node_id_to_row_column).and_return([row, column])
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(false)
+      end
+
+      it 'calls node_id_to_row_column with correct upcase parameter' do
+        expect(described_class).to receive(:node_id_to_row_column).with(node_id.upcase)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'calls position_out_of_bounds? with correct parameter' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'returns true' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(true)
+      end
+    end
+
+    context 'when node_id is valid, but out of bounds' do
+      row = 0
+      column = 9
+      node_id = 'A9'
+      before do
+        allow(described_class).to receive(:node_id_to_row_column).and_return([row, column])
+        allow(described_class).to receive(:position_out_of_bounds?).and_return(true)
+      end
+
+      it 'calls node_id_to_row_column with correct parameter' do
+        expect(described_class).to receive(:node_id_to_row_column).with(node_id)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'calls position_out_of_bounds? with correct parameter' do
+        expect(described_class).to receive(:position_out_of_bounds?).with(column, row)
+        described_class.valid_node_id?(node_id)
+      end
+
+      it 'returns false' do
+        result = described_class.valid_node_id?(node_id)
+        expect(result).to eq(false)
       end
     end
   end
