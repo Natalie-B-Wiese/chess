@@ -35,7 +35,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = King.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
@@ -50,7 +50,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = Queen.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
@@ -66,7 +66,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = Rook.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
@@ -81,7 +81,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = Bishop.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
@@ -96,7 +96,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = Knight.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
@@ -111,7 +111,7 @@ class PlayerPieces
 
     nodes.each do |node_id|
       piece = Pawn.new(player, board)
-      board.node_by_id(node_id).replace_piece(piece)
+      board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end

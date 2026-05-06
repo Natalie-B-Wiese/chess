@@ -7,7 +7,7 @@ class Piece
   # board: a reference to the board this piece belongs to
   # node: a reference to the tile this piece currently sits on
 
-  attr_reader :player
+  attr_reader :player, :has_moved
 
   WHITE = "\e[47m"
   BLACK = "\e[100m"
@@ -18,6 +18,11 @@ class Piece
     @board = board
     @symbol = symbol
     @color = player.is_white ? WHITE : BLACK
+    @has_moved = false
+  end
+
+  def move_piece
+    @has_moved = true
   end
 
   # methods:

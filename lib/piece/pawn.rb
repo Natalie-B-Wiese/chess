@@ -24,14 +24,11 @@ class Pawn < Piece
 
   private
 
-  # returns true if this pawn is still in its initial position
-  def first_move?
-    node.row == @player.is_white ? 1 : (Grid::HEIGHT - 2)
-  end
-
   def valid_vertical_nodes
-    # get the path for the pawn and allow it to move a distance of 2 on the first move
-    path_array = vertical_nodes(@board, node, @forward, first_move? ? 2 : 1)
+    # allow pawn to move 2 units if it has never moved before
+    max_move_amount = @has_moved ? 1 : 2
+
+    path_array = vertical_nodes(@board, node, @forward, max_move_amount)
 
     return path_array if path_array.empty?
 

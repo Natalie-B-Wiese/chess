@@ -67,11 +67,18 @@ class Node
     !@piece.nil?
   end
 
+  # places the chess piece in this node but does not set has_moved on the chess piece
+  def set_initial_piece(chess_piece)
+    @piece = chess_piece
+  end
+
   # Replaces the current @piece value with chess_piece
   # It returns the chess piece that was replaced (which could be nil)
+  # Sets has_moved flag for the piece
   def replace_piece(chess_piece)
     previous_piece = @piece
     @piece = chess_piece
+    chess_piece.move_piece
     previous_piece
   end
 
