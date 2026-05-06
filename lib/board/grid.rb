@@ -115,13 +115,32 @@ class Grid
   end
 
   # untested
+
+  # returns an array of nodes that have a piece on them
+  def nodes_with_pieces
+    @nodes.flatten.select(&:full?)
+  end
+
+  # returns an array of nodes that have a piece on them belonging to specified player
+  def nodes_with_player_piece(player)
+    nodes_with_pieces.select { |node| node.piece.player == player }
+  end
+
   # Returns the node that contains that specific chess piece object.
   # Note: Piece must match exactly. Two rooks of the same player are still different pieces
   def node_by_piece(piece)
-    node_with_piece = @nodes.flatten.select { |node| node.piece == piece }
+    node_with_piece = nodes_with_pieces.select { |node| node.piece == piece }
     return nil if node_with_piece.empty?
 
     node_with_piece[0]
+  end
+
+  # returns an array of nodes that hold the specified piece type
+  # could return an empty array if piece was not found
+  def node_by_piece_type(piece_class)
+    nodes_with_pieces.select do |node|
+      node.piece.instance_of?(piece_class)
+    end
   end
 
   private

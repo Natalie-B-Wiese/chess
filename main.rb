@@ -12,4 +12,8 @@ game = Game.new(player1, player2)
 player1_pieces = PlayerPieces.new(player1, game.board)
 player2_pieces = PlayerPieces.new(player2, game.board)
 
+puts game.board.node_by_piece_type(King)
+
+puts game.board.nodes_with_player_piece(player1)
+
 game.play_game
