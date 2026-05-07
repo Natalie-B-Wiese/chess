@@ -26,11 +26,36 @@ class Game
       print_current_player
 
       keep_playing = play_round
+      next unless keep_playing
+
+      in_check_hash = kings_in_check
+      if in_check_hash[@current_player] == true
+        puts 'Your King is in check with that move.'
+        puts 'add something here to undo move and make make player do a different move'
+      end
+
+      opponent = opposite_player(@current_player)
+      puts "#{opponent.name}'s King is now in check" if in_check_hash[opponent] == true
 
       switch_player
     end
 
     puts 'quitting...'
+  end
+
+  # returns a hash where the keys are the players and the value is true if in check, and false otherwise
+  def kings_in_check
+    nodes_with_king = @board.node_by_piece_type(King)
+    result = {}
+
+    nodes_with_king.each do |node|
+      player = node.piece.player
+      opposing_player = opposite_player(player)
+
+      result[player] = node_reachable_by_player?(node, opposing_player)
+    end
+
+    result
   end
 
   # plays a round
