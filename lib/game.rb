@@ -19,23 +19,12 @@ class Game
   end
 
   def play_game
-    keep_playing = true
-
-    until keep_playing == false
+    loop do
       GridDrawer.draw(@board)
       print_current_player
 
       keep_playing = play_round
-      next unless keep_playing
-
-      in_check_hash = kings_in_check
-      if in_check_hash[@current_player] == true
-        puts 'Your King is in check with that move.'
-        puts 'add something here to undo move and make make player do a different move'
-      end
-
-      opponent = opposite_player(@current_player)
-      puts "#{opponent.name}'s King is now in check" if in_check_hash[opponent] == true
+      break unless keep_playing
 
       switch_player
     end
@@ -58,21 +47,57 @@ class Game
     result
   end
 
-  # plays a round
-  # It returns false if quitting and true if it should continue playing
-  def play_round
-    move = start_and_end_node
+  # preforms a valid move
+  # returns nil if user quit game
+  # If user did not quit, then it returns an array of info about the move
+  def preform_valid_move
+    loop do
+      move = start_and_end_node
+      return nil if move.nil?
 
-    return false if move.nil?
+      start_node, end_node = move
+      selected_piece = start_node.piece
+      previous_has_moved, piece_killed = simulate_move(start_node, end_node, selected_piece)
 
-    start_node, end_node = move
-    selected_piece = start_node.piece
+      return [start_node, end_node, selected_piece, piece_killed] unless kings_in_check[@current_player] == true
+
+      puts 'Your King is in check with that move. Choose a different piece and move'
+
+      undo_move(start_node, end_node, selected_piece, previous_has_moved, piece_killed)
+    end
+  end
+
+  # preforms a move and keeps track of previous info in case move needs to undo
+  # Returns [previous_has_moved, piece_killed]
+  def simulate_move(start_node, end_node, selected_piece)
+    previous_has_moved = selected_piece.has_moved
 
     # preform the move
     piece_killed = end_node.replace_piece(selected_piece)
     start_node.remove_piece
 
-    print_move_result(@current_player, selected_piece, end_node, piece_killed)
+    # return the previous version of the move
+    [previous_has_moved, piece_killed]
+  end
+
+  # Undoes a single move
+  def undo_move(start_node, end_node, selected_piece, previous_has_moved, piece_killed)
+    selected_piece.has_moved = previous_has_moved
+    start_node.set_initial_piece(selected_piece)
+    end_node.set_initial_piece(piece_killed)
+  end
+
+  # plays a round
+  # It returns false if quitting (or game over) and returns true if it should continue playing
+  def play_round
+    move_info = preform_valid_move
+    return false if move_info.nil?
+
+    start_node, end_node, selected_piece, piece_killed = move_info
+    print_move_result(start_node, end_node, selected_piece, piece_killed)
+
+    opponent = opposite_player(@current_player)
+    puts "#{opponent.name}'s King is now in check" if kings_in_check[opponent] == true
 
     return true unless piece_killed.instance_of?(King)
 
@@ -117,8 +142,9 @@ class Game
     [starting_node, ending_node]
   end
 
-  def print_move_result(player, selected_piece, end_node, piece_killed)
-    str = "#{player.name}'s #{selected_piece.class} moved to #{end_node.id}"
+  # print_move_result(start_node, end_node, selected_piece, piece_killed)
+  def print_move_result(start_node, end_node, selected_piece, piece_killed)
+    str = "#{@current_player.name}'s #{selected_piece.class} moved to #{end_node.id}"
 
     str += " and killed #{piece_killed.player.name}'s #{piece_killed.class}" unless piece_killed.nil?
     puts str

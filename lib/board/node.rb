@@ -80,7 +80,7 @@ class Node
   def replace_piece(chess_piece)
     previous_piece = @piece
     @piece = chess_piece
-    chess_piece.move_piece
+    chess_piece.has_moved = true
     previous_piece
   end
 
