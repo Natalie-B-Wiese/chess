@@ -4,6 +4,8 @@ require_relative 'board/grid'
 require_relative 'board/grid_drawer'
 require_relative 'board/grid_coordinates'
 
+require_relative 'terminal/terminal'
+
 # holds a game
 class Game
   attr_reader :board
@@ -61,7 +63,7 @@ class Game
 
       return [start_node, end_node, selected_piece, piece_killed] unless kings_in_check[@current_player] == true
 
-      puts 'Your King is in check with that move. Choose a different piece and move'
+      Terminal.print_error('Your King is in check with that move. Choose a different piece and move')
 
       undo_move(start_node, end_node, selected_piece, previous_has_moved, piece_killed)
     end
@@ -167,13 +169,13 @@ class Game
   # returns true if the node is valid, otherwise returns false
   def valid_start_node?(node)
     if node.nil?
-      puts 'Invalid node'
+      Terminal.print_error('Invalid node')
     elsif !node.full?
-      puts "There is no chess piece at #{node.id}"
+      Terminal.print_error("There is no chess piece at #{node.id}")
     elsif node.piece.player == @current_player
       return true
     else
-      puts "You cannot move the opposing player's piece!"
+      Terminal.print_error("You cannot move the opposing player's piece!")
     end
 
     false
@@ -196,7 +198,7 @@ class Game
   def valid_end_node?(starting_node, goal_node)
     return true if !goal_node.nil? && starting_node.piece.valid_move?(goal_node)
 
-    puts "Invalid move for #{starting_node.piece.class}"
+    Terminal.print_error("Invalid move for #{starting_node.piece.class}")
     false
   end
 
@@ -212,7 +214,7 @@ class Game
         return answer
       end
 
-      puts 'Invalid position!'
+      Terminal.print_error('Invalid position!')
     end
   end
 

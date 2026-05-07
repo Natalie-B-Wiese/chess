@@ -1,5 +1,7 @@
 # frozen-string-literal: true
 
+require_relative '../terminal/terminal_colors'
+
 # An abstract class for a single chess piece
 class Piece
   # variables:
@@ -10,22 +12,18 @@ class Piece
   attr_reader :player
   attr_accessor :has_moved
 
-  WHITE = "\e[47m"
-  BLACK = "\e[100m"
-  RESET = "\e[49m"
-
   def initialize(player, board, symbol)
     @player = player
     @board = board
     @symbol = symbol
-    @color = player.is_white ? WHITE : BLACK
+    @color = player.is_white ? TerminalColors::WHITE : TerminalColors::BLACK
     @has_moved = false
   end
 
   # methods:
   # #to_s returns the piece's unique symbol
   def to_s
-    "#{@color} #{@symbol} #{RESET}"
+    "#{@color} #{@symbol} #{TerminalColors::RESET}"
   end
 
   # the node this piece is currently in
