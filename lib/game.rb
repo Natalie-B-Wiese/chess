@@ -8,6 +8,8 @@ require_relative 'terminal/terminal'
 
 require_relative 'user_input'
 
+require_relative 'piece/piece_conversion'
+
 # holds a game
 class Game
   attr_reader :board, :current_player
@@ -100,6 +102,8 @@ class Game
     start_node, end_node, selected_piece, piece_killed = move_info
     print_move_result(start_node, end_node, selected_piece, piece_killed)
 
+    promote(end_node, selected_piece) if selected_piece.instance_of?(Pawn) && selected_piece.promotable?(end_node)
+
     opponent = opposite_player(@current_player)
     puts "#{opponent.name}'s King is now in check" if kings_in_check[opponent] == true
 
@@ -107,6 +111,18 @@ class Game
 
     puts 'Game over!'
     false
+  end
+
+  # promotes the pawn at the specified node to a different piece
+  def promote(node, pawn)
+    promote_type = pawn.promote_type_input
+
+    replacement_piece_class = PieceConversion.letter_to_piece_type(promote_type)
+    puts "Pawn has been promoted to a #{replacement_piece_class.name}"
+
+    replacement_piece = replacement_piece_class.new(pawn.player, @board)
+
+    node.replace_piece(replacement_piece)
   end
 
   # switches the player

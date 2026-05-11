@@ -26,6 +26,11 @@ class Piece
     "#{@color} #{@symbol} #{TerminalColors::RESET}"
   end
 
+  # returns false
+  def promotable?
+    false
+  end
+
   # the node this piece is currently in
   def node
     @board.node_by_piece(self)
