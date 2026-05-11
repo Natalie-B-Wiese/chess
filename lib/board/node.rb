@@ -8,9 +8,6 @@ class Node
   # variables:
   # id: a unique id of the node that includes the column as a letter name and the row as a number (eg h8)
   # piece (a reference to the chess piece this node holds)
-  PADDING = 2
-  SIZE = ((PADDING * 2) + 1)
-
   attr_reader :row, :column, :id, :piece
 
   def initialize(row, column)
@@ -29,37 +26,7 @@ class Node
   end
 
   def to_s
-    return "#{Node.left_border} #{Node.right_border}" if @piece.nil?
-
-    str = '|'
-    # the '|' count as part of the size
-    str += ' ' * (Node::PADDING - 2)
-    str += @piece.to_s
-    str += '|'
-    str
-  end
-
-  # returns a string for a top or bottom horizontal border
-  def self.horizontal_border
-    str = '+'
-    # the 2 '+' count as part of the size
-    str += '-' * (Node::SIZE - 2)
-    str += '+'
-    str
-  end
-
-  def self.left_border
-    str = '|'
-    # the '|' count as part of the size
-    str += ' ' * (Node::PADDING - 1)
-    str
-  end
-
-  def self.right_border
-    # the '|' count as part of the size
-    str = ' ' * (Node::PADDING - 1)
-    str += '|'
-    str
+    @id
   end
 
   # methods:

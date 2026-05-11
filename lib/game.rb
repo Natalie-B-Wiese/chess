@@ -150,7 +150,7 @@ class Game
 
   # print_move_result(start_node, end_node, selected_piece, piece_killed)
   def print_move_result(start_node, end_node, selected_piece, piece_killed)
-    str = "#{@current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node.id}"
+    str = "#{@current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node}"
 
     str += " and killed #{piece_killed.player.name}'s #{piece_killed.class}" unless piece_killed.nil?
     puts str

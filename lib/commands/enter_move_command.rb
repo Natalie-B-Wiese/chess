@@ -40,7 +40,7 @@ class EnterMoveCommand < Command
     if node.nil?
       Terminal.print_error("#{node} is out of bounds")
     elsif !node.full?
-      Terminal.print_error("There is no chess piece at #{node.id}")
+      Terminal.print_error("There is no chess piece at #{node}")
     elsif node.piece.player == game.current_player
       return true
     else
