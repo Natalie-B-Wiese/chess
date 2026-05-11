@@ -42,6 +42,11 @@ class Grid
     @all_nodes.select(&:full?)
   end
 
+  # returns an array of nodes that have a passant
+  def nodes_with_en_passant
+    @all_nodes.select(&:contains_passant?)
+  end
+
   # returns an array of nodes that have a piece on them belonging to specified player
   def nodes_with_player_piece(player)
     nodes_with_pieces.select { |node| node.piece.player == player }
@@ -61,6 +66,13 @@ class Grid
   def node_by_piece_type(piece_class)
     nodes_with_pieces.select do |node|
       node.piece.instance_of?(piece_class)
+    end
+  end
+
+  # removes all en_passant 'pieces' that belong to the player
+  def clear_all_en_passant_of_player(player)
+    nodes_with_en_passant.each do |n|
+      n.clear_en_passant_of_player(player)
     end
   end
 end

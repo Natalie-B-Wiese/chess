@@ -83,8 +83,8 @@ class Pawn < Piece
   # gets nodes that are diagonal to this pawn and are occuppied by an opposing piece
   def valid_diagonal_nodes
     start_node = node
-    diagonal_nodes.reject do |n|
-      n.nil? || !n.full? || n.same_player?(start_node)
+    diagonal_nodes.select do |n|
+      !n.nil? && (n.contains_passant? || n.full?) && !n.same_player?(start_node)
     end
   end
 

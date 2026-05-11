@@ -9,6 +9,7 @@ require_relative 'terminal/terminal'
 require_relative 'user_input'
 
 require_relative 'piece/piece_conversion'
+require_relative 'piece/pawn_passant'
 
 # holds a game
 class Game
@@ -26,6 +27,8 @@ class Game
 
   def play_game
     loop do
+      @board.clear_all_en_passant_of_player(@current_player)
+
       GridDrawer.draw(@board)
       print_current_player
 
@@ -91,6 +94,8 @@ class Game
     selected_piece.has_moved = previous_has_moved
     start_node.set_initial_piece(selected_piece)
     end_node.set_initial_piece(piece_killed)
+    @board.clear_all_en_passant_of_player(@current_player)
+    piece_killed.undo_kill_linked_piece if piece_killed.instance_of?(PawnPassant)
   end
 
   # plays a round
@@ -102,7 +107,7 @@ class Game
     start_node, end_node, selected_piece, piece_killed = move_info
     print_move_result(start_node, end_node, selected_piece, piece_killed)
 
-    promote(end_node, selected_piece) if selected_piece.instance_of?(Pawn) && selected_piece.promotable?(end_node)
+    pawn_moved(start_node, end_node, selected_piece) if selected_piece.instance_of?(Pawn)
 
     opponent = opposite_player(@current_player)
     puts "#{opponent.name}'s King is now in check" if kings_in_check[opponent] == true
@@ -111,6 +116,22 @@ class Game
 
     puts 'Game over!'
     false
+  end
+
+  # applies special logic when a pawn moves
+  def pawn_moved(start_node, goal_node, pawn)
+    promote(goal_node, pawn) if pawn.promotable?(goal_node)
+
+    # if the pawn moved two squares, create a passant pawn on the square pawn jumped over
+    create_passant_pawn(start_node, goal_node, pawn) if (goal_node.row - start_node.row).abs == 2
+  end
+
+  # creates a passant pawn between start_node and goal_node
+  def create_passant_pawn(start_node, goal_node, pawn)
+    mid_row = (goal_node.row + start_node.row) / 2
+    mid_node = @board.node_at_row_column(mid_row, goal_node.column)
+    passant = PawnPassant.new(pawn)
+    mid_node.set_initial_piece(passant)
   end
 
   # promotes the pawn at the specified node to a different piece
@@ -139,7 +160,8 @@ class Game
   # perhaps move this to the board class
   def node_reachable_by_player?(goal_node, player)
     @board.nodes_with_player_piece(player).each do |node|
-      return true if node.piece.paths.include?(goal_node)
+      # return true if node.piece.paths.include?(goal_node)
+      return true if node.piece.valid_move?(goal_node)
     end
 
     false

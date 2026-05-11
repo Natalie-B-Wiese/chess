@@ -20,7 +20,7 @@ class Node
   # returns true if this node is occuppied by a piece with the same player as other_node's piece
   # Returns false if piece belongs to a different player or piece is nil
   def same_player?(other_node)
-    return piece.player == other_node.piece.player if full? && other_node.full?
+    return piece.player == other_node.piece.player if !@piece.nil? && !other_node.piece.nil?
 
     false
   end
@@ -31,9 +31,13 @@ class Node
 
   # methods:
   # full?
-  # Returns true if this node is occuppied by a piece
+  # Returns true if this node is occuppied by a piece (excludes passant pieces)
   def full?
-    !@piece.nil?
+    !@piece.nil? && !contains_passant?
+  end
+
+  def contains_passant?
+    @piece.instance_of?(PawnPassant)
   end
 
   # places the chess piece in this node but does not set has_moved on the chess piece
@@ -46,6 +50,9 @@ class Node
   # Sets has_moved flag for the piece
   def replace_piece(chess_piece)
     previous_piece = @piece
+
+    @piece.kill_linked_piece if contains_passant? && chess_piece.instance_of?(Pawn)
+
     @piece = chess_piece
     chess_piece.has_moved = true
     previous_piece
@@ -54,5 +61,10 @@ class Node
   # Removes the piece from this node
   def remove_piece
     @piece = nil
+  end
+
+  # clears the en passant of the specified player
+  def clear_en_passant_of_player(player)
+    remove_piece if contains_passant? && @piece.player == player
   end
 end

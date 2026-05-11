@@ -8,7 +8,7 @@ class NodeDrawer
   end
 
   def self.to_s(node)
-    return "#{left_border} #{right_border}" if node.piece.nil?
+    return "#{left_border} #{right_border}" unless node.full?
 
     str = '|'
     # the '|' count as part of the size
