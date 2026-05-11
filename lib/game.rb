@@ -6,9 +6,11 @@ require_relative 'board/grid_coordinates'
 
 require_relative 'terminal/terminal'
 
+require_relative 'user_input'
+
 # holds a game
 class Game
-  attr_reader :board
+  attr_reader :board, :current_player
 
   # player1 is the white player, and player2 is the black player
   def initialize(player1, player2)
@@ -118,6 +120,7 @@ class Game
   end
 
   # returns true if the specified node can be reached by any of player's pieces in a single move
+  # perhaps move this to the board class
   def node_reachable_by_player?(goal_node, player)
     @board.nodes_with_player_piece(player).each do |node|
       return true if node.piece.paths.include?(goal_node)
@@ -132,90 +135,25 @@ class Game
   # index 0 is start node, and index 1 is end node.
   # returns nil if user quit game.
   def start_and_end_node
-    ending_node = nil
+    input = nil
 
-    while ending_node.nil?
-      starting_node = start_node
-      return nil if starting_node.nil?
+    while input.nil?
+      puts 'Enter move (eg A2 A3), enter a command, or type HELP'
 
-      ending_node = end_node(starting_node)
+      input = UserInput.gets_and_interpret(self)
+      return nil if input == 'QUIT'
     end
 
-    [starting_node, ending_node]
+    # if it made it here, then the input is the two nodes that are validated
+    input
   end
 
   # print_move_result(start_node, end_node, selected_piece, piece_killed)
   def print_move_result(start_node, end_node, selected_piece, piece_killed)
-    str = "#{@current_player.name}'s #{selected_piece.class} moved to #{end_node.id}"
+    str = "#{@current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node.id}"
 
     str += " and killed #{piece_killed.player.name}'s #{piece_killed.class}" unless piece_killed.nil?
     puts str
-  end
-
-  # returns a valid starting node
-  # start_node always contains a chess piece that belongs to this player
-  # Returns nil if user typed 'back'
-  def start_node
-    loop do
-      response = player_node_id("Enter starting position (eg A1) or type 'back' to go back")
-
-      return nil if response == 'back'
-
-      node = @board.node_by_id(response)
-      return node if valid_start_node?(node)
-    end
-  end
-
-  # returns true if the node is valid, otherwise returns false
-  def valid_start_node?(node)
-    if node.nil?
-      Terminal.print_error('Invalid node')
-    elsif !node.full?
-      Terminal.print_error("There is no chess piece at #{node.id}")
-    elsif node.piece.player == @current_player
-      return true
-    else
-      Terminal.print_error("You cannot move the opposing player's piece!")
-    end
-
-    false
-  end
-
-  # returns a valid ending node
-  # Returns nil if user typed 'back'
-  def end_node(starting_node)
-    loop do
-      response = player_node_id("Enter ending position (eg A1) or type 'back' to go back")
-
-      return nil if response == 'back'
-
-      node = @board.node_by_id(response)
-      return node if valid_end_node?(starting_node, node)
-    end
-  end
-
-  # returns true if the node is valid, otherwise returns false
-  def valid_end_node?(starting_node, goal_node)
-    return true if !goal_node.nil? && starting_node.piece.valid_move?(goal_node)
-
-    Terminal.print_error("Invalid move for #{starting_node.piece.class}")
-    false
-  end
-
-  # returns a valid node_id or returns 'back' if user typed 'BACK' or 'back'
-  def player_node_id(prompt)
-    loop do
-      puts prompt
-      answer = gets.chomp.upcase
-
-      if answer.downcase == 'back'
-        return 'back'
-      elsif GridCoordinates.valid_node_id?(answer)
-        return answer
-      end
-
-      Terminal.print_error('Invalid position!')
-    end
   end
 
   def print_current_player
