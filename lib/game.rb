@@ -11,14 +11,16 @@ require_relative 'user_input'
 require_relative 'piece/piece_conversion'
 require_relative 'piece/pawn_passant'
 
+require_relative './player'
+
 # holds a game
 class Game
   attr_reader :board, :current_player
 
-  # player1 is the white player, and player2 is the black player
-  def initialize(player1, player2)
-    @player1 = player1
-    @player2 = player2
+  def initialize
+    # player 1 is white and player 2 is black
+    @player1 = Player.new('Player 1', true)
+    @player2 = Player.new('Player 2', false)
 
     @board = Grid.new
 
@@ -41,21 +43,6 @@ class Game
     puts 'quitting...'
   end
 
-  # returns a hash where the keys are the players and the value is true if in check, and false otherwise
-  def kings_in_check
-    nodes_with_king = @board.node_by_piece_type(King)
-    result = {}
-
-    nodes_with_king.each do |node|
-      player = node.piece.player
-      opposing_player = opposite_player(player)
-
-      result[player] = node_reachable_by_player?(node, opposing_player)
-    end
-
-    result
-  end
-
   # preforms a valid move
   # returns nil if user quit game
   # If user did not quit, then it returns an array of info about the move
@@ -68,7 +55,7 @@ class Game
       selected_piece = start_node.piece
       previous_has_moved, piece_killed = simulate_move(start_node, end_node, selected_piece)
 
-      return [start_node, end_node, selected_piece, piece_killed] unless kings_in_check[@current_player] == true
+      return [start_node, end_node, selected_piece, piece_killed] unless @board.player_king_in_check?(@current_player)
 
       Terminal.print_error('Your King is in check with that move. Choose a different piece and move')
 
@@ -110,7 +97,7 @@ class Game
     pawn_moved(start_node, end_node, selected_piece) if selected_piece.instance_of?(Pawn)
 
     opponent = opposite_player(@current_player)
-    puts "#{opponent.name}'s King is now in check" if kings_in_check[opponent] == true
+    puts "#{opponent.name}'s King is now in check" if @board.player_king_in_check?(opponent) == true
 
     return true unless piece_killed.instance_of?(King)
 
@@ -130,7 +117,7 @@ class Game
   def create_passant_pawn(start_node, goal_node, pawn)
     mid_row = (goal_node.row + start_node.row) / 2
     mid_node = @board.node_at_row_column(mid_row, goal_node.column)
-    passant = PawnPassant.new(pawn)
+    passant = PawnPassant.new(pawn, goal_node)
     mid_node.set_initial_piece(passant)
   end
 
@@ -156,17 +143,6 @@ class Game
     player == @player1 ? @player2 : @player1
   end
 
-  # returns true if the specified node can be reached by any of player's pieces in a single move
-  # perhaps move this to the board class
-  def node_reachable_by_player?(goal_node, player)
-    @board.nodes_with_player_piece(player).each do |node|
-      # return true if node.piece.paths.include?(goal_node)
-      return true if node.piece.valid_move?(goal_node)
-    end
-
-    false
-  end
-
   private
 
   # returns a valid start and end node as an array
@@ -190,7 +166,8 @@ class Game
   def print_move_result(start_node, end_node, selected_piece, piece_killed)
     str = "#{@current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node}"
 
-    str += " and killed #{piece_killed.player.name}'s #{piece_killed.class}" unless piece_killed.nil?
+    player_who_died = opposite_player(@current_player)
+    str += " and killed #{player_who_died.name}'s #{piece_killed.class}" unless piece_killed.nil?
     puts str
   end
 

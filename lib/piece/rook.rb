@@ -9,26 +9,24 @@ class Rook < Piece
   include HorizontalSlidingMovement
   include VerticalSlidingMovement
 
-  def initialize(player, board)
+  def initialize(is_white_player)
     graphic = 'R'
-    super(player, board, graphic)
+    super(is_white_player, graphic)
   end
 
-  def paths
-    valid_vertical_nodes + valid_horizontal_nodes
+  def paths(start_node, board)
+    valid_vertical_nodes(start_node, board) + valid_horizontal_nodes(start_node, board)
   end
 
   private
 
-  def valid_vertical_nodes
-    start_node = node
-    trim_friendly_endpoint(vertical_nodes(@board, start_node, 1), start_node) +
-      trim_friendly_endpoint(vertical_nodes(@board, start_node, -1), start_node)
+  def valid_vertical_nodes(start_node, board)
+    trim_friendly_endpoint(vertical_nodes(board, start_node, 1), start_node) +
+      trim_friendly_endpoint(vertical_nodes(board, start_node, -1), start_node)
   end
 
-  def valid_horizontal_nodes
-    start_node = node
-    trim_friendly_endpoint(horizontal_nodes(@board, start_node, 1), start_node) +
-      trim_friendly_endpoint(horizontal_nodes(@board, start_node, -1), start_node)
+  def valid_horizontal_nodes(start_node, board)
+    trim_friendly_endpoint(horizontal_nodes(board, start_node, 1), start_node) +
+      trim_friendly_endpoint(horizontal_nodes(board, start_node, -1), start_node)
   end
 end

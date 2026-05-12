@@ -11,24 +11,24 @@ require_relative 'board/grid_coordinates'
 class PlayerPieces
   attr_reader :pieces
 
-  def initialize(player, board)
+  def initialize(is_white, board)
     @pieces = []
-    create_pieces(player, board)
+    create_pieces(is_white, board)
   end
 
-  def create_pieces(player, board)
-    create_king(player, board)
-    create_queen(player, board)
-    create_rooks(player, board)
-    create_bishops(player, board)
-    create_knights(player, board)
-    create_pawns(player, board)
+  def create_pieces(is_white, board)
+    create_king(is_white, board)
+    create_queen(is_white, board)
+    create_rooks(is_white, board)
+    create_bishops(is_white, board)
+    create_knights(is_white, board)
+    create_pawns(is_white, board)
   end
 
   private
 
-  def create_king(player, board)
-    mirrored = !player.is_white
+  def create_king(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[E1]
@@ -36,14 +36,14 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = King.new(player, board)
+      piece = King.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
 
-  def create_queen(player, board)
-    mirrored = !player.is_white
+  def create_queen(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[D1]
@@ -51,15 +51,15 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = Queen.new(player, board)
+      piece = Queen.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
 
   # creates two rooks and places them in their starting node
-  def create_rooks(player, board)
-    mirrored = !player.is_white
+  def create_rooks(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[A1 H1]
@@ -67,14 +67,14 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = Rook.new(player, board)
+      piece = Rook.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
 
-  def create_bishops(player, board)
-    mirrored = !player.is_white
+  def create_bishops(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[B1 G1]
@@ -82,14 +82,14 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = Bishop.new(player, board)
+      piece = Bishop.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
 
-  def create_knights(player, board)
-    mirrored = !player.is_white
+  def create_knights(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[C1 F1]
@@ -97,14 +97,14 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = Knight.new(player, board)
+      piece = Knight.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end
   end
 
-  def create_pawns(player, board)
-    mirrored = !player.is_white
+  def create_pawns(is_white, board)
+    mirrored = !is_white
 
     # placement for white player
     nodes = %w[A2 B2 C2 D2 E2 F2 G2 H2]
@@ -112,7 +112,7 @@ class PlayerPieces
     nodes.map! { |id| GridCoordinates.mirror_node_id(id) } if mirrored
 
     nodes.each do |node_id|
-      piece = Pawn.new(player, board)
+      piece = Pawn.new(is_white)
       board.node_by_id(node_id).set_initial_piece(piece)
       @pieces.push(piece)
     end

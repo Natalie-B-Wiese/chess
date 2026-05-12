@@ -20,7 +20,7 @@ class Node
   # returns true if this node is occuppied by a piece with the same player as other_node's piece
   # Returns false if piece belongs to a different player or piece is nil
   def same_player?(other_node)
-    return piece.player == other_node.piece.player if !@piece.nil? && !other_node.piece.nil?
+    return piece.same_player?(other_node.piece) if !@piece.nil? && !other_node.piece.nil?
 
     false
   end
@@ -65,6 +65,6 @@ class Node
 
   # clears the en passant of the specified player
   def clear_en_passant_of_player(player)
-    remove_piece if contains_passant? && @piece.player == player
+    remove_piece if contains_passant? && @piece.is_white == player.is_white
   end
 end

@@ -25,23 +25,25 @@ class EnterMoveCommand < Command
   # Move is fully validated (except for detecting Kings in check)
   def self.parse_node_ids_from_input(input, game)
     node_ids = input.split(' ')
-    start_node = game.board.node_by_id(node_ids[0])
-    goal_node = game.board.node_by_id(node_ids[1])
+    start_node_id = node_ids[0]
+    goal_node_id = node_ids[1]
+    start_node = game.board.node_by_id(start_node_id)
+    goal_node = game.board.node_by_id(goal_node_id)
 
-    return nil unless valid_start_node?(start_node, game)
-    return nil unless valid_end_node?(start_node, goal_node)
+    return nil unless valid_start_node?(start_node, start_node_id, game)
+    return nil unless valid_end_node?(start_node, goal_node, goal_node_id, game.board)
 
     [start_node, goal_node]
   end
 
   # returns true if the node is valid, otherwise returns false
   # Prints an error message indicating what went wrong
-  def self.valid_start_node?(node, game)
+  def self.valid_start_node?(node, node_id, game)
     if node.nil?
-      Terminal.print_error("#{node} is out of bounds")
+      Terminal.print_error("#{node_id} is out of bounds")
     elsif !node.full?
       Terminal.print_error("There is no chess piece at #{node}")
-    elsif node.piece.player == game.current_player
+    elsif node.piece.same_player?(game.current_player)
       return true
     else
       Terminal.print_error("You cannot move the opposing player's piece!")
@@ -52,10 +54,10 @@ class EnterMoveCommand < Command
 
   # returns true if the move is valid, otherwise returns false
   # Prints an error message indicating what went wrong
-  def self.valid_end_node?(starting_node, goal_node)
+  def self.valid_end_node?(starting_node, goal_node, goal_node_id, board)
     if goal_node.nil?
-      Terminal.print_error("#{node} is out of bounds")
-    elsif starting_node.piece.valid_move?(goal_node)
+      Terminal.print_error("#{goal_node_id} is out of bounds")
+    elsif starting_node.piece.valid_move?(starting_node, goal_node, board)
       return true
     else
       Terminal.print_error("Invalid move for #{starting_node.piece.class}")

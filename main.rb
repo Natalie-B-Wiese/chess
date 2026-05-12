@@ -1,21 +1,14 @@
 require_relative 'lib/game'
-require_relative 'lib/player'
 require_relative 'lib/player_pieces'
 
 require_relative 'lib/terminal/terminal'
 require_relative 'lib/user_input'
 
-# create a game, players, and play the game
-player1 = Player.new('Player 1', true)
-player2 = Player.new('Player 2', false)
+# create a new game and play the game
+game = Game.new
 
-game = Game.new(player1, player2)
-
-player1_pieces = PlayerPieces.new(player1, game.board)
-player2_pieces = PlayerPieces.new(player2, game.board)
-
-# Terminal.create_info_box('HELP:', box_info, 40)
+# PlayerPieces creates all player pieces for a new game and sets up positioning for player pieces
+player1_pieces = PlayerPieces.new(true, game.board)
+player2_pieces = PlayerPieces.new(false, game.board)
 
 game.play_game
-# puts 'Enter input'
-# UserInput.gets_and_interpret

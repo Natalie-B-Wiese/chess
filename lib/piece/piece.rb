@@ -4,20 +4,22 @@ require_relative '../terminal/terminal_colors'
 
 # An abstract class for a single chess piece
 class Piece
-  # variables:
-  # player: a reference to player they belong to (white player or black player)
-  # board: a reference to the board this piece belongs to
-  # node: a reference to the tile this piece currently sits on
-
-  attr_reader :player
   attr_accessor :has_moved
+  attr_reader :is_white
 
-  def initialize(player, board, symbol)
-    @player = player
-    @board = board
+  def initialize(is_white_player, symbol)
+    # @player = player
+    # @board = board
     @symbol = symbol
-    @color = player.is_white ? TerminalColors::WHITE : TerminalColors::BLACK
+    @is_white = is_white_player
+    @color = is_white_player ? TerminalColors::WHITE : TerminalColors::BLACK
     @has_moved = false
+  end
+
+  def same_player?(other_piece)
+    return false if other_piece.nil?
+
+    @is_white == other_piece.is_white
   end
 
   # methods:
@@ -31,20 +33,15 @@ class Piece
     false
   end
 
-  # the node this piece is currently in
-  def node
-    @board.node_by_piece(self)
-  end
-
   # #valid_move?(Node node)
   # returns true if this piece can move to the specified node
-  def valid_move?(goal_node)
-    paths.include?(goal_node)
+  def valid_move?(starting_node, goal_node, board)
+    paths(starting_node, board).include?(goal_node)
   end
 
   # paths
   # Returns an array of all valid nodes that this piece can move to
-  def paths
+  def paths(starting_node, board)
     raise NotImplementedError, 'This method must be implemented in a subclass'
   end
 
