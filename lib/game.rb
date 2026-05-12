@@ -18,7 +18,7 @@ require_relative 'save_load/fen'
 # holds a game
 class Game
   include Fen
-  attr_reader :board, :current_player
+  attr_reader :board, :rounds
 
   def initialize
     # player 1 is white and player 2 is black
@@ -27,7 +27,14 @@ class Game
 
     @board = Grid.new
 
-    @current_player = @player1
+    # the number of total moves that have been preformed
+    # If each player does 1 move, then rounds will be 2
+    @rounds = 0
+  end
+
+  # the current player based on the number of rounds completed
+  def current_player
+    @rounds.even? ? @player1 : @player2
   end
 
   def as_fen
@@ -40,7 +47,7 @@ class Game
 
   def play_game
     loop do
-      @board.clear_all_en_passant_of_player(@current_player)
+      @board.clear_all_en_passant_of_player(current_player)
 
       GridDrawer.draw(@board)
       print_current_player
@@ -48,7 +55,7 @@ class Game
       keep_playing = play_round
       break unless keep_playing
 
-      switch_player
+      @rounds += 1
     end
 
     puts 'quitting...'
@@ -66,7 +73,7 @@ class Game
       selected_piece = start_node.piece
       previous_has_moved, piece_killed = simulate_move(start_node, end_node, selected_piece)
 
-      return [start_node, end_node, selected_piece, piece_killed] unless @board.player_king_in_check?(@current_player)
+      return [start_node, end_node, selected_piece, piece_killed] unless @board.player_king_in_check?(current_player)
 
       Terminal.print_error('Your King is in check with that move. Choose a different piece and move')
 
@@ -92,7 +99,7 @@ class Game
     selected_piece.has_moved = previous_has_moved
     start_node.set_initial_piece(selected_piece)
     end_node.set_initial_piece(piece_killed)
-    @board.clear_all_en_passant_of_player(@current_player)
+    @board.clear_all_en_passant_of_player(current_player)
     piece_killed.undo_kill_linked_piece if piece_killed.instance_of?(PawnPassant)
   end
 
@@ -107,7 +114,7 @@ class Game
 
     pawn_moved(start_node, end_node, selected_piece) if selected_piece.instance_of?(Pawn)
 
-    opponent = opposite_player(@current_player)
+    opponent = opposite_player(current_player)
     puts "#{opponent.name}'s King is now in check" if @board.player_king_in_check?(opponent) == true
 
     return true unless piece_killed.instance_of?(King)
@@ -144,11 +151,6 @@ class Game
     node.replace_piece(replacement_piece)
   end
 
-  # switches the player
-  def switch_player
-    @current_player = opposite_player(@current_player)
-  end
-
   # returns the opposite player to the passed in player
   def opposite_player(player)
     player == @player1 ? @player2 : @player1
@@ -175,14 +177,14 @@ class Game
 
   # print_move_result(start_node, end_node, selected_piece, piece_killed)
   def print_move_result(start_node, end_node, selected_piece, piece_killed)
-    str = "#{@current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node}"
+    str = "#{current_player.name}'s #{selected_piece.class} on #{start_node} moved to #{end_node}"
 
-    player_who_died = opposite_player(@current_player)
+    player_who_died = opposite_player(current_player)
     str += " and killed #{player_who_died.name}'s #{piece_killed.class}" unless piece_killed.nil?
     puts str
   end
 
   def print_current_player
-    puts "It is #{@current_player.name}'s turn"
+    puts "It is #{current_player.name}'s turn"
   end
 end
