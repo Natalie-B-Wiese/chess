@@ -1,12 +1,14 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
+require_relative 'moveable_piece'
+
 require_relative 'moveset/diagonal_sliding_movement'
 require_relative 'moveset/horizontal_sliding_movement'
 require_relative 'moveset/vertical_sliding_movement'
 
 # a queen piece
-class Queen < Piece
+class Queen < MoveablePiece
   include DiagonalSlidingMovement
   include HorizontalSlidingMovement
   include VerticalSlidingMovement

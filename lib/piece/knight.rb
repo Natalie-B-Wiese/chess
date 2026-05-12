@@ -1,9 +1,10 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
+require_relative 'moveable_piece'
 
 # a knight piece
-class Knight < Piece
+class Knight < MoveablePiece
   def initialize(is_white_player)
     graphic = 'N'
 

@@ -1,6 +1,7 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
+require_relative 'moveable_piece'
 
 require_relative 'moveset/vertical_sliding_movement'
 require_relative 'moveset/diagonal_sliding_movement'
@@ -8,7 +9,7 @@ require_relative '../board/grid_settings'
 require_relative '../terminal/terminal'
 
 # a pawn piece
-class Pawn < Piece
+class Pawn < MoveablePiece
   include VerticalSlidingMovement
   include DiagonalSlidingMovement
 

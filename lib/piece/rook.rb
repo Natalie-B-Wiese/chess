@@ -1,11 +1,12 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
+require_relative 'moveable_piece'
 require_relative 'moveset/horizontal_sliding_movement'
 require_relative 'moveset/vertical_sliding_movement'
 
 # a rook piece
-class Rook < Piece
+class Rook < MoveablePiece
   include HorizontalSlidingMovement
   include VerticalSlidingMovement
 

@@ -1,10 +1,12 @@
 # frozen-string-literal: true
 
 require_relative 'piece'
+require_relative 'moveable_piece'
+
 require_relative 'moveset/diagonal_sliding_movement'
 
 # a bishop piece
-class Bishop < Piece
+class Bishop < MoveablePiece
   include DiagonalSlidingMovement
 
   def initialize(is_white_player)
