@@ -28,4 +28,15 @@ module PieceConversion
   def self.piece_type_to_letter(piece_type)
     PIECE_TYPES.invert[piece_type]
   end
+
+  # creates a new piece of the correct class based on the fen_str
+  def self.from_fen(fen_str)
+    is_white = (fen_str == fen_str.upcase)
+    symbol = fen_str.upcase
+
+    piece_type = letter_to_piece_type(symbol)
+    raise ArgumentError, "Unknown FEN piece: #{fen_str}" unless piece_type
+
+    letter_to_piece_type(symbol).new(is_white)
+  end
 end

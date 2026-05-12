@@ -2,6 +2,7 @@
 
 require_relative 'grid_coordinates'
 require_relative '../save_load/fen'
+require_relative '../piece/piece_conversion'
 
 # an abstract class for holding a node
 # Nodes cannot exist without a grid
@@ -28,6 +29,11 @@ class Node
     else
       @piece.as_fen
     end
+  end
+
+  # loads the piece from the fen string (fen string should be a single letter representing the piece)
+  def load_from_fen(fen_str)
+    set_initial_piece(PieceConversion.from_fen(fen_str))
   end
 
   # returns true if this node is occuppied by a piece with the same player as other_node's piece

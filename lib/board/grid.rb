@@ -35,6 +35,24 @@ class Grid
     @nodes.map { |node_row| fen_row(node_row) }.join('/')
   end
 
+  # loads values of fen_str into this grid
+  # fen_str should look like: RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr
+  def load_from_fen(fen_str)
+    fen_str.split('/').each_with_index do |row_str, r|
+      c = 0
+      row_str.chars.each do |piece_str|
+        # if it is not an empty tile (empty tiles have a number)
+        if piece_str.to_i.zero?
+          @nodes[r][c].load_from_fen(piece_str)
+          c += 1
+        else
+          # skip the number that are blank
+          c += piece_str.to_i
+        end
+      end
+    end
+  end
+
   # gets a node at a specified position. Returns nil if out of bounds
   def node_at_row_column(row, column)
     return nil if GridCoordinates.position_out_of_bounds?(column, row)

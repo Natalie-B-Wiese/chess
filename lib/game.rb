@@ -34,6 +34,10 @@ class Game
     raise NotImplementedError, "as_fen method must be implemented in class #{self.class.name}"
   end
 
+  def load_from_fen(fen_str)
+    raise NotImplementedError, "load_from_fen method is not yet implemented in class #{self.class.name}"
+  end
+
   def play_game
     loop do
       @board.clear_all_en_passant_of_player(@current_player)
