@@ -4,8 +4,12 @@ require_relative 'node'
 require_relative 'grid_coordinates'
 require_relative 'grid_settings'
 
+require_relative '../save_load/fen'
+
 # holds a bunch of nodes
 class Grid
+  include Fen
+
   # a 2D array (only accessed from Grid_Drawer)
   attr_reader :nodes
 
@@ -21,6 +25,14 @@ class Grid
     end
 
     @all_nodes = @nodes.flatten
+  end
+
+  # as_fen is untested
+  # fen produced from new game: RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr
+  # Note: this is not a true fen since the ranks aren't reversed
+  # A true fen from new game: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+  def as_fen
+    @nodes.map { |node_row| fen_row(node_row) }.join('/')
   end
 
   # gets a node at a specified position. Returns nil if out of bounds
@@ -114,6 +126,33 @@ class Grid
   def clear_all_en_passant_of_player(player)
     nodes_with_en_passant.each do |n|
       n.clear_en_passant_of_player(player)
+    end
+  end
+
+  private
+
+  # fen_row is untested
+  # within each rank, the contents of the squares are described in order from the a-file to the h-file.
+  def fen_row(nodes_in_row)
+    arr = []
+    nodes_in_row.each do |node|
+      if node.as_fen.nil?
+        handle_empty_fen(arr)
+      else
+        arr.push(node.as_fen)
+      end
+    end
+    arr.join
+  end
+
+  # A set of one or more consecutive empty squares within a row is denoted by a digit from "1" to "8"
+  # The digit corresponds to the number of empty squares in a row.
+  # handle_empty_fen is untested
+  def handle_empty_fen(arr)
+    if arr.last.is_a?(Integer)
+      arr[-1] += 1
+    else
+      arr.push(1)
     end
   end
 end

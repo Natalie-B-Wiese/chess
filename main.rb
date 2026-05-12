@@ -11,4 +11,6 @@ game = Game.new
 player1_pieces = PlayerPieces.new(true, game.board)
 player2_pieces = PlayerPieces.new(false, game.board)
 
+puts game.board.as_fen
+
 game.play_game

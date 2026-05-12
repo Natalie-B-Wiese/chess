@@ -13,8 +13,11 @@ require_relative 'piece/pawn_passant'
 
 require_relative './player'
 
+require_relative 'save_load/fen'
+
 # holds a game
 class Game
+  include Fen
   attr_reader :board, :current_player
 
   def initialize
@@ -25,6 +28,10 @@ class Game
     @board = Grid.new
 
     @current_player = @player1
+  end
+
+  def as_fen
+    raise NotImplementedError, "as_fen method must be implemented in class #{self.class.name}"
   end
 
   def play_game

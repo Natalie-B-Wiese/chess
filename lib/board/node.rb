@@ -1,10 +1,13 @@
 # frozen-string-literal: true
 
 require_relative 'grid_coordinates'
+require_relative '../save_load/fen'
 
 # an abstract class for holding a node
 # Nodes cannot exist without a grid
 class Node
+  include Fen
+
   # variables:
   # id: a unique id of the node that includes the column as a letter name and the row as a number (eg h8)
   # piece (a reference to the chess piece this node holds)
@@ -15,6 +18,16 @@ class Node
     @column = column
     @id = GridCoordinates.row_column_to_node_id(row, column)
     @piece = nil
+  end
+
+  # returns the piece's fen if there is a piece (or passant). If there is no piece or passant, it returns nil
+  # Example fen produced: R
+  def as_fen
+    if @piece.nil?
+      nil
+    else
+      @piece.as_fen
+    end
   end
 
   # returns true if this node is occuppied by a piece with the same player as other_node's piece
