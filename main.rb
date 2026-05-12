@@ -1,5 +1,4 @@
 require_relative 'lib/game'
-require_relative 'lib/player_pieces'
 
 require_relative 'lib/terminal/terminal'
 require_relative 'lib/user_input'
