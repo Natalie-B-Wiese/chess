@@ -8,13 +8,12 @@ require_relative '../save_load/fen'
 # It is deleted after a full round (both players have gone)
 class PawnPassant < Piece
   include Fen
+  SYMBOL = 'E'
 
   def initialize(pawn_link, node_link)
     @piece_link = pawn_link
     @node_link = node_link
-    symbol = 'E'
-
-    super(pawn_link.is_white, symbol)
+    super(pawn_link.is_white, SYMBOL)
   end
 
   def as_fen

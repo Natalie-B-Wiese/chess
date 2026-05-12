@@ -11,12 +11,12 @@ require_relative 'rook'
 # for converting between letters and a piece class
 module PieceConversion
   PIECE_TYPES = {
-    'B' => Bishop,
-    'K' => King,
-    'N' => Knight,
-    'P' => Pawn,
-    'Q' => Queen,
-    'R' => Rook
+    Bishop::SYMBOL => Bishop,
+    King::SYMBOL => King,
+    Knight::SYMBOL => Knight,
+    Pawn::SYMBOL => Pawn,
+    Queen::SYMBOL => Queen,
+    Rook::SYMBOL => Rook
   }
 
   # converts a string letter into a class

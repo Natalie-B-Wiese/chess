@@ -13,9 +13,10 @@ class Queen < MoveablePiece
   include HorizontalSlidingMovement
   include VerticalSlidingMovement
 
+  SYMBOL = 'Q'
+
   def initialize(is_white_player)
-    graphic = 'Q'
-    super(is_white_player, graphic)
+    super(is_white_player, SYMBOL)
   end
 
   def paths(start_node, board)

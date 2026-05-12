@@ -12,12 +12,12 @@ require_relative '../terminal/terminal'
 class Pawn < MoveablePiece
   include VerticalSlidingMovement
   include DiagonalSlidingMovement
+  SYMBOL = 'P'
 
   def initialize(is_white_player)
-    graphic = 'P'
     @forward = is_white_player ? 1 : -1
 
-    super(is_white_player, graphic)
+    super(is_white_player, SYMBOL)
   end
 
   # paths

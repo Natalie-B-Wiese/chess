@@ -5,10 +5,10 @@ require_relative 'moveable_piece'
 
 # a knight piece
 class Knight < MoveablePiece
-  def initialize(is_white_player)
-    graphic = 'N'
+  SYMBOL = 'N'
 
-    super(is_white_player, graphic)
+  def initialize(is_white_player)
+    super(is_white_player, SYMBOL)
   end
 
   def paths(start_node, board)

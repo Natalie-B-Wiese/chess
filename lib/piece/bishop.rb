@@ -8,11 +8,10 @@ require_relative 'moveset/diagonal_sliding_movement'
 # a bishop piece
 class Bishop < MoveablePiece
   include DiagonalSlidingMovement
+  SYMBOL = 'B'
 
   def initialize(is_white_player)
-    graphic = 'B'
-
-    super(is_white_player, graphic)
+    super(is_white_player, SYMBOL)
   end
 
   def paths(start_node, board)

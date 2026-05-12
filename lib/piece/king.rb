@@ -14,10 +14,10 @@ class King < MoveablePiece
   include VerticalSlidingMovement
 
   DISTANCE = 1
+  SYMBOL = 'B'
 
   def initialize(is_white_player)
-    graphic = 'K'
-    super(is_white_player, graphic)
+    super(is_white_player, SYMBOL)
   end
 
   def paths(start_node, board)

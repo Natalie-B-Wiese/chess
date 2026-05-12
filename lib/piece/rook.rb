@@ -10,9 +10,10 @@ class Rook < MoveablePiece
   include HorizontalSlidingMovement
   include VerticalSlidingMovement
 
+  SYMBOL = 'R'
+
   def initialize(is_white_player)
-    graphic = 'R'
-    super(is_white_player, graphic)
+    super(is_white_player, SYMBOL)
   end
 
   def paths(start_node, board)
