@@ -8,10 +8,15 @@ require_relative 'moveset/diagonal_sliding_movement'
 require_relative '../board/grid_settings'
 require_relative '../terminal/terminal'
 
+require_relative 'promotable'
+require_relative 'pawn_passant'
+
 # a pawn piece
 class Pawn < MoveablePiece
   include VerticalSlidingMovement
   include DiagonalSlidingMovement
+  include Promotable
+
   SYMBOL = 'P'
 
   def initialize(is_white_player)
@@ -20,50 +25,37 @@ class Pawn < MoveablePiece
     super(is_white_player, SYMBOL)
   end
 
+  # applies additional special logic when a pawn moves
+  def confirm_move(board)
+    promote(self, @goal_node) if promotable?
+
+    # if the pawn moved two squares, create a passant pawn
+    create_passant_pawn(board) if (@goal_node.row - @start_node.row).abs == 2
+
+    # this must be last since it clears the start_node, goal_node, and piece_killed variables
+    super(board)
+  end
+
   # paths
   # Returns an array of all valid nodes that this piece could move to
   def paths(start_node, board)
     valid_vertical_nodes(start_node, board) + valid_diagonal_nodes(start_node, board)
   end
 
-  # returns true if the pawn is in a promotable spot, otherwise returns false
-  def promotable?(node)
-    (@forward == 1 && node.row == GridSettings::HEIGHT - 1) || (@forward == -1 && node.row == 0)
-  end
-
-  # return a valid letter string indiciating which piece to promote the pawn to
-  def promote_type_input
-    show_promotable_options
-    puts 'Pawn has reached the other side! It can be promoted to another piece.'
-    promote_type_prompt
-  end
-
   private
 
-  def show_promotable_options
-    content_array = [
-      'R - Rook',
-      'B - Bishop',
-      'N - Knight',
-      'Q - Queen'
-    ]
-
-    Terminal.create_info_box('PIECES:', content_array, 20)
+  def promotable?
+    (@is_white && @goal_node.row == GridSettings.top_row) ||
+      (@is_white == false && @goal_node.row == GridSettings.bottom_row)
   end
 
-  # prompts user for the type of piece to promote pawn to
-  # It returns a valid letter option (R, B, N, or Q)
-  def promote_type_prompt
-    loop do
-      puts 'Promote pawn to piece (R, B, N, or Q): '
-      input = gets.chomp.upcase
-      case input
-      when 'R', 'B', 'N', 'Q'
-        return input
-      else
-        Terminal.print_error('Invalid option! You must choose between R, B, N, or Q')
-      end
-    end
+  # creates a passant pawn between start_node and goal_node (aka current node)
+  def create_passant_pawn(board)
+    mid_row = (@goal_node.row + @start_node.row) / 2
+    mid_node = board.node_at_row_column(mid_row, @goal_node.column)
+    passant = PawnPassant.new(@is_white)
+    passant.setup_node_link(@goal_node)
+    mid_node.set_initial_piece(passant)
   end
 
   def valid_vertical_nodes(start_node, board)

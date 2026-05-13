@@ -6,6 +6,8 @@ require_relative 'piece'
 class MoveablePiece < Piece
   attr_accessor :has_moved
 
+  attr_reader :goal_node, :start_node
+
   def initialize(is_white_player, symbol)
     super(is_white_player, symbol)
     @has_moved = false
@@ -37,5 +39,42 @@ class MoveablePiece < Piece
     path_array.pop if path_array.last.same_player?(start_node)
 
     path_array
+  end
+
+  # simulates a move with this piece from start_node to goal piece
+  # It keeps track of data
+  def simulate_move(start_node, goal_node)
+    puts 'Move simulated'
+    @start_node = start_node
+    @goal_node = goal_node
+
+    @piece_killed = @goal_node.replace_piece(self)
+    @start_node.remove_piece
+  end
+
+  # confirms the move of this piece
+  def confirm_move(board)
+    @has_moved = true
+    @start_node = nil
+    @goal_node = nil
+    @piece_killed = nil
+
+    print_move_result
+  end
+
+  # undoes the move that this piece just made
+  def undo_move
+    @start_node.set_initial_piece(self)
+    @end_node.set_initial_piece(@piece_killed)
+    @piece_killed.undo_kill_linked_piece if @piece_killed.instance_of?(PawnPassant)
+  end
+
+  private
+
+  def print_move_result
+    str = "#{self.class.name} on #{@start_node} moved to #{@end_node}"
+
+    str += " and killed #{@piece_killed.class.name}" unless @piece_killed.nil?
+    puts str
   end
 end
