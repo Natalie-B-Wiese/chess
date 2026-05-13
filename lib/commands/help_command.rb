@@ -10,7 +10,8 @@ class HelpCommand < Command
       'HELP - shows this help box',
       'BOARD - draws board in terminal',
       'PIECES - shows full names of pieces',
-      'MOVES - show all available moves',
+      'CK - castle kingside',
+      'CQ - castle queenside',
       'QUIT - exits the game without saving',
       'SAVE - saves the game as a file'
     ]

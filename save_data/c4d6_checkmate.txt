@@ -1,1 +1,1 @@
-{"@board":"1n2KBNR/P1P1PPPP/8/2N1R3/1p1P2B1/7p/3pnpp1/rnqbkb1r","@rounds":22}
+{"@board":"1n2KBNR/P1P1PPPP/8/2N1R3/1p1P2B1/7p/3pnpp1/rnqbkb1r","@rounds":22,"@p1_castle":"K","@p2_castle":"QK"}

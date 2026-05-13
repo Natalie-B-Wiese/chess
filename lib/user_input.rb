@@ -20,12 +20,12 @@ module UserInput
       BoardCommand.execute(game)
     when 'PIECES'
       PiecesCommand.execute
-    when 'MOVES'
-      puts 'do something here to show the list of moves of all pieces of this player'
     when 'QUIT'
       return 'QUIT'
     when 'SAVE'
       SaveCommand.execute(game)
+    when 'CQ', 'CK'
+      return answer
     else
       return EnterMoveCommand.execute(answer, game)
     end

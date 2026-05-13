@@ -1,0 +1,5 @@
+class CastlingSettings
+  KING_COLUMN = 4
+  QUEENSIDE_ROOK_COLUMN = 0
+  KINGSIDE_ROOK_COLUMN = 7
+end

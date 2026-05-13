@@ -1,0 +1,1 @@
+{"@board":"R3K2R/1PPPPPPP/R7/P7/4p3/8/ppppkppp/r3k2r","@rounds":4,"@p1_castle":"QK","@p2_castle":"QK"}
