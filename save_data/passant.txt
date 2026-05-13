@@ -1,1 +1,0 @@
-{"@board":"RNBQBBNR/1PPPPPPP/E7/P7/8/8/pppppppp/rnbbqbnr","@rounds":1}

@@ -59,6 +59,18 @@ class Game
       GridDrawer.draw(@board)
       print_current_player
 
+      # If current player is in checkmate, then quit the game
+      in_check = @board.player_king_in_check?(current_player)
+      if in_check
+        in_checkmate = escape_check?(current_player) == false
+        if in_checkmate
+          Terminal.print_error("#{current_player.name} is in checkmate! Game over!")
+          break
+        else
+          Terminal.print_error("#{current_player.name} is in check")
+        end
+      end
+
       keep_playing = play_round
       break unless keep_playing
 
@@ -95,15 +107,43 @@ class Game
     return false if preform_valid_move.nil?
 
     opponent = opposite_player(current_player)
-    puts "#{opponent.name}'s King is now in check" if @board.player_king_in_check?(opponent) == true
-
-    # TODO: add a check to see if king is in checkmate
+    opponent_in_check = @board.player_king_in_check?(opponent)
+    puts "#{opponent.name}'s King is now in check" if opponent_in_check == true
 
     puts @board.nodes_by_piece_type_and_player(King, opponent)
 
-    return true unless @board.nodes_by_piece_type_and_player(King, opponent).empty?
+    true
+  end
 
-    puts 'Game over!'
+  # This isn't a very efficient method, but it does at least work
+  # It returns true if it is possible for the player to escape check by making a single move
+  # It also returns true if the current player is not in check
+  def escape_check?(player)
+    in_check = @board.player_king_in_check?(player)
+    return true unless in_check
+
+    nodes_with_pieces = @board.nodes_with_player_piece(player)
+
+    # foreach node that has a piece that belongs to the player
+    nodes_with_pieces.each do |current_node|
+      current_piece = current_node.piece
+      moves = current_piece.paths(current_node, @board)
+      # foreach move on the piece
+      moves.each do |goal_node|
+        # simulate a temporary fake move
+        current_piece.simulate_move(current_node, goal_node)
+
+        # check if King is still in check
+        in_check = @board.player_king_in_check?(player)
+
+        # undo the move
+        current_piece.undo_move
+
+        # if no longer in check, then return true
+        return true unless in_check
+      end
+    end
+
     false
   end
 

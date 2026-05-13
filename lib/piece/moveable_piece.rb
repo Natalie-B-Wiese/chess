@@ -65,14 +65,14 @@ class MoveablePiece < Piece
   # undoes the move that this piece just made
   def undo_move
     @start_node.set_initial_piece(self)
-    @end_node.set_initial_piece(@piece_killed)
+    @goal_node.set_initial_piece(@piece_killed)
     @piece_killed.undo_kill_linked_piece if @piece_killed.instance_of?(PawnPassant)
   end
 
   private
 
   def print_move_result
-    str = "#{self.class.name} on #{@start_node} moved to #{@end_node}"
+    str = "#{self.class.name} on #{@start_node} moved to #{@goal_node}"
 
     str += " and killed #{@piece_killed.class.name}" unless @piece_killed.nil?
     puts str
