@@ -54,12 +54,12 @@ class MoveablePiece < Piece
 
   # confirms the move of this piece
   def confirm_move(board)
+    print_move_result
+
     @has_moved = true
     @start_node = nil
     @goal_node = nil
     @piece_killed = nil
-
-    print_move_result
   end
 
   # undoes the move that this piece just made
