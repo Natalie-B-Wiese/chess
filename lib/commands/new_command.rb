@@ -10,7 +10,7 @@ class NewCommand < Command
   # Plays a new game
   def self.execute
     game = Game.new
-    game.board.load_from_fen('RNBQBBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbbqbnr')
+    game.board.load_from_fen('RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr')
     game.play_game
   end
 end

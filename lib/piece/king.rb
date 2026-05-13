@@ -14,7 +14,7 @@ class King < MoveablePiece
   include VerticalSlidingMovement
 
   DISTANCE = 1
-  SYMBOL = 'B'
+  SYMBOL = 'K'
 
   def initialize(is_white_player)
     super(is_white_player, SYMBOL)
