@@ -7,6 +7,7 @@ require_relative 'knight'
 require_relative 'pawn'
 require_relative 'queen'
 require_relative 'rook'
+require_relative 'pawn_passant'
 
 # for converting between letters and a piece class
 module PieceConversion
@@ -16,7 +17,8 @@ module PieceConversion
     Knight::SYMBOL => Knight,
     Pawn::SYMBOL => Pawn,
     Queen::SYMBOL => Queen,
-    Rook::SYMBOL => Rook
+    Rook::SYMBOL => Rook,
+    PawnPassant::SYMBOL => PawnPassant
   }
 
   # converts a string letter into a class

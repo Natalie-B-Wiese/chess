@@ -36,6 +36,21 @@ class Node
     set_initial_piece(PieceConversion.from_fen(fen_str))
   end
 
+  # sets the node link of the piece if the piece is a passant
+  def setup_if_passant(board)
+    return unless contains_passant?
+
+    r = @row
+    # white pawns move up, while black pawns move columns down
+    if @piece.is_white
+      r += 1
+    else
+      r -= 1
+    end
+    node_link = board.node_at_row_column(r, @column)
+    @piece.setup_node_link(node_link)
+  end
+
   # returns true if this node is occuppied by a piece with the same player as other_node's piece
   # Returns false if piece belongs to a different player or piece is nil
   def same_player?(other_node)

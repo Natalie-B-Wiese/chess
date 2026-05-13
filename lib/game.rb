@@ -142,7 +142,8 @@ class Game
   def create_passant_pawn(start_node, goal_node, pawn)
     mid_row = (goal_node.row + start_node.row) / 2
     mid_node = @board.node_at_row_column(mid_row, goal_node.column)
-    passant = PawnPassant.new(pawn, goal_node)
+    passant = PawnPassant.new(pawn.is_white)
+    passant.setup_node_link(goal_node)
     mid_node.set_initial_piece(passant)
   end
 

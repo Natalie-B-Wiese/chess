@@ -5,6 +5,7 @@ require_relative 'grid_coordinates'
 require_relative 'grid_settings'
 
 require_relative '../save_load/fen'
+require_relative '../piece/pawn_passant'
 
 # holds a bunch of nodes
 class Grid
@@ -51,6 +52,9 @@ class Grid
         end
       end
     end
+
+    @all_nodes = @nodes.flatten
+    nodes_with_en_passant.each { |node| node.setup_if_passant(self) }
   end
 
   # gets a node at a specified position. Returns nil if out of bounds
