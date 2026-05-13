@@ -13,11 +13,12 @@ require_relative 'piece/pawn_passant'
 
 require_relative './player'
 
-require_relative 'save_load/fen'
+require_relative 'save_load/serializable'
 
 # holds a game
 class Game
-  include Fen
+  include Serializable
+
   attr_reader :board, :rounds
 
   def initialize
@@ -37,12 +38,18 @@ class Game
     @rounds.even? ? @player1 : @player2
   end
 
-  def as_fen
-    raise NotImplementedError, "as_fen method must be implemented in class #{self.class.name}"
+  def serialize
+    obj = {}
+    obj[:@board] = @board.as_fen
+    obj[:@rounds] = @rounds
+
+    @@serializer.dump obj
   end
 
-  def load_from_fen(fen_str)
-    raise NotImplementedError, "load_from_fen method is not yet implemented in class #{self.class.name}"
+  def unserialize(string)
+    obj = @@serializer.parse(string, symbolize_names: true)
+    @board.load_from_fen(obj[:@board])
+    @rounds = obj[:@rounds]
   end
 
   def play_game

@@ -4,6 +4,7 @@ require_relative 'commands/help_command'
 require_relative 'commands/board_command'
 require_relative 'commands/pieces_command'
 require_relative 'commands/enter_move_command'
+require_relative 'commands/save_command'
 
 # interprets user input from the terminal and calls the correct command
 module UserInput
@@ -24,7 +25,7 @@ module UserInput
     when 'QUIT'
       return 'QUIT'
     when 'SAVE'
-      puts 'do something here to save'
+      SaveCommand.execute(game)
     else
       return EnterMoveCommand.execute(answer, game)
     end
